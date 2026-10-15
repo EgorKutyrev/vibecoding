@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreePyCamp: Курс Python</title>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
+    <style>
+        :root { --bg: #1e1e1e; --text: #e0e0e0; --accent: #007acc; --border: #333; --btn: #005a9e; }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; }
+        header { padding: 15px 20px; background: #0d0d0d; border-bottom: 1px solid var(--border); font-size: 1.2em; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        #container { flex: 1; display: flex; overflow: hidden; }
+        #sidebar { width: 250px; background: #111; border-right: 1px solid var(--border); overflow-y: auto; }
+        #sidebar h3 { padding: 15px 20px; margin: 0; background: #1a1a1a; border-bottom: 1px solid var(--border); }
+        .module { border-bottom: 1px solid var(--border); }
+        .module-title { padding: 15px 20px; cursor: pointer; background: #181818; user-select: none; }
+        .module-title:hover { background: #222; }
+        .lessons { list-style: none; padding: 0; margin: 0; display: none; }
+        .lessons li { padding: 10px 30px; cursor: pointer; font-size: 0.9em; }
+        .lessons li:hover, .active-lesson { background: var(--accent) !important; color: #fff !important; }
+        #content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        #lesson-area { flex: 1; padding: 20px; overflow-y: auto; background: #1e1e1e; }
+        #code-area { display: flex; height: 300px; border-top: 1px solid var(--border); }
+        #editor { flex: 1; border: none; font-family: 'Consolas', 'Courier New', monospace; padding: 15px; background: #252526; color: #fff; resize: none; }
+        #output { flex: 1; border: none; font-family: 'Consolas', 'Courier New', monospace; padding: 15px; background: #111; color: #0f0; overflow-y: auto; white-space: pre-wrap; }
+        .controls { padding: 10px 20px; background: #1a1a1a; border-top: 1px solid var(--border); display: flex; gap: 10px; }
+        button { background: var(--btn); color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; }
+        button:hover { background: #005087; }
+        button:disabled { background: #555; cursor: not-allowed; }
+        pre { background: #222; padding: 15px; border-radius: 5px; overflow-x: auto; border: 1px solid #333; }
+        code { color: #ce9178; }
+        .task { background: #2d2d2d; border-left: 4px solid #d16969; padding: 15px; margin: 20px 0; }
+        .hint { background: #2d2d2d; border-left: 4px solid var(--accent); padding: 15px; margin: 10px 0; font-style: italic; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div>🐍 FreePyCamp</div>
+    <div id="status">Загрузка Python...</div>
+</header>
+
+<div id="container">
+    <div id="sidebar">
+        <h3>📚 Модули</h3>
+        <div class="module">
+            <div class="module-title" onclick="toggleModule(0)">1. Основы и переменные</div>
+            <ul class="lessons" id="lessons-0">
+                <li onclick="loadLesson(0, 0)">Переменные и типы данных</li>
+                <li onclick="loadLesson(0, 1)">Арифметические операции</li>
+            </ul>
+        </div>
+        <div class="module">
+            <div class="module-title" onclick="toggleModule(1)">2. Ввод и вывод</div>
+            <ul class="lessons" id="lessons-1" style="display: none;">
+                <li onclick="loadLesson(1, 0)">Функция print()</li>
+                <li onclick="loadLesson(1, 1)">Функция input()</li>
+            </ul>
+        </div>
+        <div class="module">
+            <div class="module-title" onclick="toggleModule(2)">3. Условные операторы</div>
+            <ul class="lessons" id="lessons-2" style="display: none;">
+                <li onclick="loadLesson(2, 0)">Оператор if</li>
+                <li onclick="loadLesson(2, 1)">if-else и elif</li>
+            </ul>
+        </div>
+        <div class="module">
+            <div class="module-title" onclick="toggleModule(3)">4. Циклы</div>
+            <ul class="lessons" id="lessons-3" style="display: none;">
+                <li onclick="loadLesson(3, 0)">Цикл for</li>
+                <li onclick="loadLesson(3, 1)">Цикл while</li>
+            </ul>
+        </div>
+        <div class="module">
+            <div class="module-title" onclick="toggleModule(4)">5. Структуры данных</div>
+            <ul class="lessons" id="lessons-4" style="display: none;">
+                <li onclick="loadLesson(4, 0)">Списки (Lists)</li>
+                <li onclick="loadLesson(4, 1)">Словари (Dictionaries)</li>
+            </ul>
+        </div>
+        <div class="module">
+            <div class="module-title" onclick="toggleModule(5)">6. Функции</div>
+            <ul class="lessons" id="lessons-5" style="display: none;">
+                <li onclick="loadLesson(5, 0)">Создание функций</li>
+                <li onclick="loadLesson(5, 1)">Аргументы и return</li>
+            </ul>
+        </div>
+        <div class="module">
+            <div class="module-title" onclick="toggleModule(6)">7. Строки</div>
+            <ul class="lessons" id="lessons-6" style="display: none;">
+                <li onclick="loadLesson(6, 0)">Методы строк</li>
+                <li onclick="loadLesson(6, 1)">Форматирование f-строк</li>
+            </ul>
+        </div>
+        <div class="module">
+            <div class="module-title" onclick="toggleModule(7)">8. Обработка ошибок</div>
+            <ul class="lessons" id="lessons-7" style="display: none;">
+                <li onclick="loadLesson(7, 0)">Конструкция try-except</li>
+            </ul>
+        </div>
+        <div class="module">
+            <div class="module-title" onclick="toggleModule(8)">9. Работа с файлами</div>
+            <ul class="lessons" id="lessons-8" style="display: none;">
+                <li onclick="loadLesson(8, 0)">Чтение и запись</li>
+            </ul>
+        </div>
+        <div class="module">
+            <div class="module-title" onclick="toggleModule(9)">10. ООП (Основы)</div>
+            <ul class="lessons" id="lessons-9" style="display: none;">
+                <li onclick="loadLesson(9, 0)">Классы и объекты</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="content">
+        <div id="lesson-area">
+            <h2 id="lesson-title">Выберите урок</h2>
+            <p id="lesson-desc">Навигация находится слева. Выберите модуль и урок, чтобы начать обучение.</p>
+            <div id="lesson-content"></div>
+        </div>
+
+        <div id="code-area">
+            <textarea id="editor"># Здесь ваш код
+print("Hello, FreePyCamp!")</textarea>
+            <div id="output"></div>
+        </div>
+
+        <div class="controls">
+            <button onclick="runCode()">▶️ Run</button>
+            <button onclick="resetCode()">🔄 Reset</button>
+            <span id="run-status"></span>
+        </div>
+    </div>
+</div>
+
+<script>
+const lessons = [
+    {
+        title: "1.1 Переменные и типы данных",
+        desc: "В Python не нужно явно указывать тип переменной.",
+        content: `
+            <div class="task">
+                <strong>Задание:</strong> Создайте переменную <code>age</code> со значением 25 и переменную <code>name</code> со своим именем. Выведите их тип с помощью функции <code>type()</code>.
+            </div>
+            <div class="hint">Подсказка: <code>age = 25</code> и <code>type(age)</code>.</div>
+            <pre><code>age = 25
+name = "Alex"
+print(type(age))
+print(type(name))</code></pre>
+        `
+    },
+    {
+        title: "1.2 Арифметические операции",
+        desc: "Сложение (+), вычитание (-), умножение (*), деление (/), целочисленное деление (//), остаток (%), степень (**).",
+        content: `
+            <div class="task">
+                <strong>Задание:</strong> У вас есть 1000 рублей. Вы купили 3 яблока по 80 рублей и 2 пакета молока по 90 рублей. Посчитайте и выведите сдачу.
+            </div>
+            <pre><code>money = 1000
+apples = 3 * 80
+milk = 2 * 90
+change = money - (apples + milk)
+print(f"Сдача: {change} руб.")</code></pre>
+        `
+    },
+    {
+        title: "2.1 Функция print()",
+        desc: "Выводит данные на экран.",
+        content: `
+            <div class="task">
+                <strong>Задание:</strong> Выведите фразу "Привет, мир!" и на следующей строке "Python — это просто".
+            </div>
+            <pre><code>print("Привет, мир!")
+print("Python — это просто")</code></pre>
+        `
+    },
+    {
+        title: "2.2 Функция input()",
+        desc: "Считывает ввод пользователя. По умолчанию возвращает строку.",
+        content: `
+            <div class="task">
+                <strong>Задание:</strong> Спросите у пользователя его любимый цвет и выведите ответ в формате: "Ваш любимый цвет — [цвет]".
+            </div>
+            <pre><code>color = input("Введите ваш любимый цвет: ")
+print(f"Ваш любимый цвет — {color}")</code></pre>
+        `
+    },
+    {
+        title: "3.1 Оператор if",
+        desc: "Выполняет код, если условие истинно.",
+        content: `
+            <div class="task">
+                <strong>Задание:</strong> Проверьте, является ли число 15 больше 10. Если да — выведите "Число большое".
+            </div>
+            <pre><code>num = 15
+if num > 10:
+    print("Число большое")</code></pre>
+        `
+    },
+    {
+        title: "3.2 if-else и elif",
+        desc: "else — если условие ложно. elif — дополнительные проверки.",
+        content: `
+            <div class="task">
+                <strong>Задание:</strong> Программа проверяет оценку. Если 5 — "Отлично", если 4 — "Хорошо", иначе — "Старайся лучше".
+            </div>
+            <pre><code>grade = 4
+if grade == 5:
+    print("Отлично")
+elif grade == 4:
+    print("Хорошо")
+else:
+    print("Старайся лучше")</code></pre>
+        `
+    },
+    {
+        title: "4.1 Цикл for",
+        desc: "Для перебора элементов (например, в списке или диапазоне).",
+        content: `
+            <div class="task">
+                <strong>Задание:</strong> Выведите числа от 1 до 5 с помощью цикла <code>for</code> и функции <code>range()</code>.
+            </div>
+            <pre><code>for i in range(1, 6):
+    print(i)</code></pre>
+        `
+    },
+    {
+        title: "4.2 Цикл while",
+        desc: "Выполняется, пока условие истинно.",
+        content: `
+            <div class="task">
+                <strong>Задание:</strong> Напечатайте обратный отсчет от 5 до 1.
+            </div>
+            <pre><code>count = 5
+while count > 0:
+    print(count)
+    count -= 1</code></pre>
+        `
+    },
+    {
+        title: "5.1 Списки (Lists)",
+        desc: "Изменяемые упорядоченные коллекции.",
+        content: `
+            <div class="task">
+                <strong>Задание:</strong> Создайте список фруктов, добавьте в него "ананас" и выведите второй элемент списка.
+            </div>
+            <pre><code>fruits = ["яблоко", "банан", "груша"]
+fruits.append("ананас")
+print(fruits[1])</code></pre>
+        `
+    },
+    {
+        title: "5.2 Словари (Dictionaries)",
+        desc: "Коллекции типа ключ-значение.",
+        content: `
+            <div class="task">
+                <strong>Задание:</strong> Создайте словарь пользователя с ключами "имя" и "возраст". Выведите имя пользователя.
+            </div>
+            <pre><code>user = {"имя": "Иван", "возраст": 30}
+print(user["имя"])</code></pre>
+        `
+    },
+    {
+        title: "6.1 Создание функций",
+        desc: "Функции помогают переиспользовать код.",
+        content: `
+            <div class="task">
+                <strong>Задание:</strong> Создайте функцию <code>greet()</code>, которая печатает "Привет из функции!", и вызовите её.
+            </div>
+            <pre><code>def greet():
+    print("Привет из функции!")
+
+greet()</code></pre>
+        `
+    },
+    {
+        title: "6.2 Аргументы и return",
+        desc: "Функции могут принимать данные и возвращать результат.",
+        content: `
+            <div class="task">
+                <strong>Задание:</strong> Создайте функцию <code>sum(a, b)</code>, которая возвращает сумму двух чисел. Вызовите её с числами 10 и 20, результат выведите на экран.
+            </div>
+            <pre><code>def sum(a, b):
+    return a + b
+
+result = sum(10, 20)
+print(result)</code></pre>
+        `
+    },
+    {
+        title: "7.1 Методы строк",
+        desc: "У строк есть встроенные методы: upper(), lower(), replace().",
+        content: `
+            <div class="task">
+                <strong>Задание:</strong> Возьмите строку "я изучаю python", сделайте все буквы заглавными и замените "Я" на "Мы".
+            </div>
+            <pre><code>text = "я изучаю python"
+text = text.upper()
+text = text.replace("Я", "Мы")
+print(text)</code></pre>
+        `
+    },
+    {
+        title: "7.2 Форматирование f-строк",
+        desc: "Современный и удобный способ вставки переменных в строку.",
+        content: `
+            <div class="task">
+                <strong>Задание:</strong> Выведите строку: "Пользователь [Имя], вам [Возраст] лет", используя f-строку.
+            </div>
+            <pre><code>name = "Алексей"
+age = 28
+print(f"Пользователь {name}, вам {age} лет")</code></pre>
+        `
+    },
+    {
+        title: "8.1 Конструкция try-except",
+        desc: "Позволяет избежать падения программы при ошибках.",
+        content: `
+            <div class="task">
+                <strong>Задание:</strong> Попросите пользователя ввести число. Попробуйте превратить его в <code>int</code>. Если возникнет ошибка <code>ValueError</code>, выведите "Это не число!".
+            </div>
+            <pre><code>try:
+    num = int(input("Введите число: "))
+    print(f"Вы ввели число {num}")
+except ValueError:
+    print("Это не число!")</code></pre>
+        `
+    },
+    {
+        title: "9.1 Чтение и запись",
+        desc: "Функции open(), read(), write() и контекстный менеджер with.",
+        content: `
+            <div class="task">
+                <strong>Задание:</strong> Запишите строку "Данные сохранены" в файл <code>data.txt</code>, а затем прочитайте его и выведите содержимое.
+            </div>
+            <pre><code># Запись
+with open("data.txt", "w", encoding="utf-8") as f:
+    f.write("Данные сохранены")
+
+# Чтение
+with open("data.txt", "r", encoding="utf-8") as f:
+    content = f.read()
+    print(content)</code></pre>
+        `
+    },
+    {
+        title: "10.1 Классы и объекты",
+        desc: "Класс — чертеж, объект — дом, построенный по нему.",
+        content: `
+            <div class="task">
+                <strong>Задание:</strong> Создайте класс <code>Dog</code> с методом <code>bark()</code>, который печатает "Гав!". Создайте объект этого класса и заставьте его залаять.
+            </div>
+            <pre><code>class Dog:
+    def bark(self):
+        print("Гав!")
+
+my_dog = Dog()
+my_dog.bark()</code></pre>
+        `
+    }
+];
+
+let pyodide = null;
+
+async function loadPyodide() {
+    document.getElementById('status').textContent = 'Инициализация Python...';
+    pyodide = await loadPyodideAsync();
+    await pyodide.loadPackage(['micropip']);
+    await pyodide.runPythonAsync(`
+import micropip
+await micropip.install('numpy')
+`);
+    document.getElementById('status').textContent = 'Готово';
+}
+
+function runCode() {
+    document.getElementById('run-status').textContent = 'Выполняется...';
+    document.getElementById('output').textContent = '';
+    const code = document.getElementById('editor').value;
+    try {
+        let result = pyodide.runPython(code);
+        if (result !== undefined && result !== null) {
+            document.getElementById('output').textContent += String(result) + "\\n";
+        }
+        document.getElementById('run-status').textContent = 'Выполнено';
+    } catch (err) {
+        document.getElementById('output').textContent += "Ошибка: " + err + "\\n";
+        document.getElementById('run-status').textContent = 'Ошибка';
+    }
+}
+
+function resetCode() {
+    const activeLesson = document.querySelector('.active-lesson');
+    if (activeLesson) {
+        const lessonIndex = activeLesson.getAttribute('data-index');
+        const lesson = lessons[lessonIndex];
+        const codeMatch = lesson.content.match(/<code>([\s\S]*?)<\/code>/);
+        if (codeMatch) {
+            document.getElementById('editor').value = codeMatch[1].trim();
+        }
+    }
+    document.getElementById('output').textContent = '';
+    document.getElementById('run-status').textContent = '';
+}
+
+function loadLesson(moduleIndex, lessonIndex) {
+    const index = moduleIndex * 2 + lessonIndex;
+    const lesson = lessons[index];
+    
+    document.getElementById('lesson-title').textContent = lesson.title;
+    document.getElementById('lesson-desc').textContent = lesson.desc;
+    document.getElementById('lesson-content').innerHTML = lesson.content;
+    
+    document.getElementById('editor').value = lesson.content.match(/<code>([\s\S]*?)<\/code>/)[1].trim();
+    
+    // Управление активными классами
+    document.querySelectorAll('.active-lesson').forEach(el => el.classList.remove('active-lesson'));
+    document.querySelectorAll('.lessons li').forEach(el => el.classList.remove('active-lesson'));
+    
+    const target = document.querySelector(\`.lessons li:nth-child(\${lessonIndex + 1})\`);
+    if (target) {
+        target.classList.add('active-lesson');
+    }
+}
+
+function toggleModule(index) {
+    const lessonsList = document.getElementById(\`lessons-\${index}\`);
+    const isHidden = lessonsList.style.display === 'none' || lessonsList.style.display === '';
+    lessonsList.style.display = isHidden ? 'block' : 'none';
+}
+
+// Запуск при загрузке страницы
+loadPyodide();
+</script>
+
+</body>
+</html>

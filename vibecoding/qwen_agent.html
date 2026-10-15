@@ -1,0 +1,2346 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PyLearn — Бесплатный курс Python</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { scrollbar-width: thin; scrollbar-color: #4a4a6a #1b1b32; }
+    *::-webkit-scrollbar { width: 8px; height: 8px; }
+    *::-webkit-scrollbar-track { background: #1b1b32; }
+    *::-webkit-scrollbar-thumb { background-color: #4a4a6a; border-radius: 4px; }
+    *::-webkit-scrollbar-thumb:hover { background-color: #6a6a8a; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; }
+    textarea { tab-size: 4; }
+    .code-editor { font-family: 'Fira Code', 'Consolas', 'Monaco', monospace; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeIn 0.3s ease-out; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .pulse { animation: pulse 2s infinite; }
+    @keyframes confetti { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(-100px) rotate(720deg); opacity: 0; } }
+  </style>
+</head>
+<body class="bg-gray-900 text-white">
+  <div id="root"></div>
+
+  <script type="text/babel" data-type="module">
+    const { useState, useEffect, useCallback, useRef } = React;
+
+    // ==================== COURSE DATA ====================
+    const courseData = [
+      {
+        id: "intro", title: "Введение в Python", icon: "🐍",
+        lessons: [
+          {
+            id: "intro-1", title: "Что такое Python?",
+            description: "Знакомство с языком программирования Python",
+            content: `# Что такое Python?
+
+**Python** — это высокоуровневый язык программирования общего назначения, созданный Гвидо ван Россумом в 1991 году.
+
+## Почему Python популярен?
+
+- 🟢 **Простой синтаксис** — код легко читать и писать
+- 🟢 **Универсальность** — веб, наука, AI, автоматизация
+- 🟢 **Огромное сообщество** — миллионы разработчиков
+- 🟢 **Богатая экосистема** — тысячи библиотек
+
+## Где используется Python?
+
+1. **Веб-разработка** — Django, Flask, FastAPI
+2. **Data Science** — pandas, numpy, matplotlib
+3. **Machine Learning** — TensorFlow, PyTorch
+4. **Автоматизация** — скрипты, боты, парсеры
+
+## Первая программа
+
+В Python для вывода текста используется функция \`print()\`:
+
+\`\`\`python
+print("Привет, мир!")
+\`\`\`
+
+> 💡 **Совет:** Каждая строка кода в Python выполняется последовательно, сверху вниз.`,
+            code: '# Напишите программу, которая выводит "Привет, мир!"\nprint("Привет, мир!")',
+            task: 'Напишите программу, которая выводит на экран текст **Hello, Python!** (именно так, с заглавной H и восклицательным знаком).',
+            hint: 'Используйте функцию print() с текстом в кавычках',
+            solution: 'print("Hello, Python!")',
+            tests: [{ expected: "Hello, Python!" }]
+          },
+          {
+            id: "intro-2", title: "Комментарии",
+            description: "Как оставлять заметки в коде",
+            content: `# Комментарии в Python
+
+Комментарии — это пояснения в коде, которые игнорируются интерпретатором.
+
+## Однострочные комментарии
+
+\`\`\`python
+# Это комментарий
+print("Привет")  # Это тоже комментарий
+\`\`\`
+
+## Многострочные комментарии
+
+\`\`\`python
+"""
+Это многострочный
+комментарий (docstring)
+"""
+\`\`\`
+
+## Зачем нужны комментарии?
+
+- 📝 Объяснить сложную логику
+- 📝 Временно отключить код
+- 📝 Описать назначение функции
+
+> 💡 Пишите комментарии, которые объясняют **почему**, а не **что** делает код.`,
+            code: '# Это мой первый комментарий\nprint("Комментарии полезны!")',
+            task: 'Создайте программу с комментарием в первой строке (начинается с #), а во второй строке выведите текст **Comments are great!**',
+            hint: 'Первая строка должна начинаться с #, вторая — print()',
+            solution: '# Это комментарий\nprint("Comments are great!")',
+            tests: [{ expected: "Comments are great!" }]
+          },
+          {
+            id: "intro-3", title: "Вывод данных (print)",
+            description: "Функция print и её возможности",
+            content: `# Функция print()
+
+Функция \`print()\` выводит данные на экран.
+
+## Вывод текста и чисел
+
+\`\`\`python
+print("Текст в кавычках")
+print(42)
+print(3.14)
+\`\`\`
+
+## Несколько значений
+
+\`\`\`python
+print("Возраст:", 25)
+print("Имя:", "Алекс", "Фамилия:", "Смит")
+\`\`\`
+
+## Параметр sep (разделитель)
+
+\`\`\`python
+print("a", "b", "c", sep="-")
+# Результат: a-b-c
+\`\`\`
+
+## Параметр end (окончание)
+
+\`\`\`python
+print("Привет", end=" ")
+print("мир!")
+# Результат: Привет мир!
+\`\`\``,
+            code: '# Экспериментируйте с print()\nprint("Python", "это", "круто!", sep="***")',
+            task: 'Выведите на экран три числа **1**, **2** и **3** в одной строке, разделённые символом **|** (используйте параметр sep).',
+            hint: 'print(1, 2, 3, sep="|")',
+            solution: 'print(1, 2, 3, sep="|")',
+            tests: [{ expected: "1|2|3" }]
+          }
+        ]
+      },
+      {
+        id: "variables", title: "Переменные и типы данных", icon: "📦",
+        lessons: [
+          {
+            id: "var-1", title: "Переменные",
+            description: "Создание и использование переменных",
+            content: `# Переменные в Python
+
+Переменная — это именованная область памяти для хранения данных.
+
+## Создание переменных
+
+\`\`\`python
+name = "Алекс"
+age = 25
+height = 1.80
+is_student = True
+\`\`\`
+
+## Правила именования
+
+✅ **Можно:** буквы, цифры (не в начале), подчёркивание
+❌ **Нельзя:** пробелы, спецсимволы, начинать с цифры
+
+\`\`\`python
+my_name = "Алекс"    # ✅ snake_case — рекомендуется
+userName = "Боб"     # ✅ camelCase — допустимо
+\`\`\`
+
+## Динамическая типизация
+
+\`\`\`python
+x = 10        # int
+x = "текст"   # теперь str
+x = 3.14      # теперь float
+\`\`\`
+
+## Множественное присваивание
+
+\`\`\`python
+a, b, c = 1, 2, 3
+x = y = z = 0
+\`\`\`
+
+## Проверка типа
+
+\`\`\`python
+x = 42
+print(type(x))  # <class 'int'>
+\`\`\``,
+            code: '# Создайте переменные и выведите их\nname = "Python"\nversion = 3.12\nprint(name, version)',
+            task: 'Создайте переменную \`language\` со значением **Python** и переменную \`year\` со значением **1991**. Выведите их через пробел.',
+            hint: 'language = "Python"\nyear = 1991\nprint(language, year)',
+            solution: 'language = "Python"\nyear = 1991\nprint(language, year)',
+            tests: [{ expected: "Python 1991" }]
+          },
+          {
+            id: "var-2", title: "Числа (int и float)",
+            description: "Целые и дробные числа",
+            content: `# Числа в Python
+
+## Целые числа (int)
+
+\`\`\`python
+age = 25
+negative = -10
+big_number = 1_000_000
+\`\`\`
+
+## Дробные числа (float)
+
+\`\`\`python
+pi = 3.14159
+temperature = -5.5
+\`\`\`
+
+## Арифметические операции
+
+\`\`\`python
+a = 10
+b = 3
+
+print(a + b)   # 13 — сложение
+print(a - b)   # 7  — вычитание
+print(a * b)   # 30 — умножение
+print(a / b)   # 3.333... — деление
+print(a // b)  # 3  — целочисленное деление
+print(a % b)   # 1  — остаток от деления
+print(a ** b)  # 1000 — степень
+\`\`\`
+
+## Преобразование типов
+
+\`\`\`python
+x = int(3.7)     # 3
+y = float(5)     # 5.0
+z = int("42")    # 42
+\`\`\``,
+            code: '# Работа с числами\na = 17\nb = 5\nprint("Сумма:", a + b)\nprint("Остаток:", a % b)\nprint("Степень:", a ** 2)',
+            task: 'Вычислите и выведите результат деления **17** на **3** с помощью оператора \`//\` (целочисленное деление).',
+            hint: 'print(17 // 3)',
+            solution: 'print(17 // 3)',
+            tests: [{ expected: "5" }]
+          },
+          {
+            id: "var-3", title: "Строки (str)",
+            description: "Работа со строками",
+            content: `# Строки в Python
+
+## Создание строк
+
+\`\`\`python
+s1 = "Привет"
+s2 = 'Мир'
+s3 = """Многострочная
+строка"""
+\`\`\`
+
+## Конкатенация и повторение
+
+\`\`\`python
+greeting = "Привет" + " " + "Мир"
+line = "-" * 20
+\`\`\`
+
+## Индексация и срезы
+
+\`\`\`python
+text = "Python"
+print(text[0])    # P
+print(text[-1])   # n
+print(text[0:3])  # Pyt
+print(text[::-1]) # nohtyP (реверс)
+\`\`\`
+
+## Методы строк
+
+\`\`\`python
+text = "Hello World"
+print(text.upper())       # HELLO WORLD
+print(text.lower())       # hello world
+print(text.replace("Hello", "Hi"))
+print(len(text))          # 11
+\`\`\`
+
+## f-строки
+
+\`\`\`python
+name = "Алекс"
+age = 25
+print(f"Меня зовут {name}, мне {age} лет")
+\`\`\``,
+            code: '# Работа со строками\nname = "Python"\nprint(f"Язык: {name}")\nprint(f"Длина: {len(name)}")\nprint(f"Верхний регистр: {name.upper()}")',
+            task: 'Создайте переменную \`word\` со значением **Python**. Выведите эту строку в верхнем регистре.',
+            hint: 'word = "Python"\nprint(word.upper())',
+            solution: 'word = "Python"\nprint(word.upper())',
+            tests: [{ expected: "PYTHON" }]
+          },
+          {
+            id: "var-4", title: "Логический тип (bool)",
+            description: "True, False и логические операции",
+            content: `# Логический тип bool
+
+## Сравнения
+
+\`\`\`python
+print(5 > 3)    # True
+print(5 < 3)    # False
+print(5 == 5)   # True
+print(5 != 3)   # True
+print(5 >= 5)   # True
+\`\`\`
+
+## Логические операторы
+
+\`\`\`python
+print(True and True)   # True
+print(True and False)  # False
+print(True or False)   # True
+print(not True)        # False
+\`\`\`
+
+## Комбинирование условий
+
+\`\`\`python
+age = 25
+has_license = True
+can_drive = age >= 18 and has_license
+print(can_drive)  # True
+\`\`\`
+
+## Приведение к bool
+
+\`\`\`python
+print(bool(0))      # False
+print(bool(1))      # True
+print(bool(""))     # False
+print(bool("text")) # True
+\`\`\``,
+            code: '# Логические выражения\nage = 20\nhas_id = True\ncan_enter = age >= 18 and has_id\nprint(f"Можно войти: {can_enter}")\nprint(f"Возраст > 25: {age > 25}")',
+            task: 'Создайте переменную \`x\` со значением **10**. Выведите результат сравнения \`x > 5\`.',
+            hint: 'x = 10\nprint(x > 5)',
+            solution: 'x = 10\nprint(x > 5)',
+            tests: [{ expected: "True" }]
+          }
+        ]
+      },
+      {
+        id: "control", title: "Условия и циклы", icon: "🔀",
+        lessons: [
+          {
+            id: "ctrl-1", title: "Условный оператор if",
+            description: "Ветвление программы с помощью if/elif/else",
+            content: `# Условный оператор if
+
+## Базовый if
+
+\`\`\`python
+age = 18
+if age >= 18:
+    print("Вы совершеннолетний")
+\`\`\`
+
+## if-else
+
+\`\`\`python
+age = 15
+if age >= 18:
+    print("Взрослый")
+else:
+    print("Несовершеннолетний")
+\`\`\`
+
+## if-elif-else
+
+\`\`\`python
+score = 85
+if score >= 90:
+    print("Отлично (A)")
+elif score >= 80:
+    print("Хорошо (B)")
+elif score >= 70:
+    print("Средне (C)")
+else:
+    print("Нужно подтянуть")
+\`\`\`
+
+## Тернарный оператор
+
+\`\`\`python
+age = 20
+status = "взрослый" if age >= 18 else "ребёнок"
+print(status)  # взрослый
+\`\`\`
+
+> ⚠️ **Важно:** В Python отступы (4 пробела) обязательны!`,
+            code: '# Проверка числа\nnumber = 15\nif number > 0:\n    print("Положительное")\nelif number < 0:\n    print("Отрицательное")\nelse:\n    print("Ноль")',
+            task: 'Создайте переменную \`temperature\` со значением **35**. Если температура больше 30, выведите **Hot**. Иначе выведите **Normal**.',
+            hint: 'Используйте if/else с условием temperature > 30',
+            solution: 'temperature = 35\nif temperature > 30:\n    print("Hot")\nelse:\n    print("Normal")',
+            tests: [{ expected: "Hot" }]
+          },
+          {
+            id: "ctrl-2", title: "Цикл while",
+            description: "Повторение кода с условием",
+            content: `# Цикл while
+
+## Базовый while
+
+\`\`\`python
+count = 0
+while count < 5:
+    print(count)
+    count += 1
+# Выведет: 0, 1, 2, 3, 4
+\`\`\`
+
+## Оператор continue
+
+\`\`\`python
+i = 0
+while i < 10:
+    i += 1
+    if i % 2 == 0:
+        continue
+    print(i)
+# Выведет: 1, 3, 5, 7, 9
+\`\`\`
+
+## Практический пример
+
+\`\`\`python
+total = 0
+num = 1
+while num <= 100:
+    total += num
+    num += 1
+print(f"Сумма: {total}")  # 5050
+\`\`\``,
+            code: '# Считаем от 1 до 5\ni = 1\nwhile i <= 5:\n    print(i)\n    i += 1',
+            task: 'Используя цикл while, выведите числа от **1** до **5**, каждое на новой строке.',
+            hint: 'Создайте счётчик i = 1 и цикл while i <= 5',
+            solution: 'i = 1\nwhile i <= 5:\n    print(i)\n    i += 1',
+            tests: [{ expected: "1\n2\n3\n4\n5" }]
+          },
+          {
+            id: "ctrl-3", title: "Цикл for",
+            description: "Итерация по последовательностям",
+            content: `# Цикл for
+
+## Перебор range
+
+\`\`\`python
+for i in range(5):
+    print(i)  # 0, 1, 2, 3, 4
+
+for i in range(1, 6):
+    print(i)  # 1, 2, 3, 4, 5
+
+for i in range(0, 10, 2):
+    print(i)  # 0, 2, 4, 6, 8
+\`\`\`
+
+## Перебор списка
+
+\`\`\`python
+fruits = ["яблоко", "банан", "вишня"]
+for fruit in fruits:
+    print(f"Я люблю {fruit}")
+\`\`\`
+
+## Функция enumerate
+
+\`\`\`python
+colors = ["красный", "зелёный", "синий"]
+for index, color in enumerate(colors):
+    print(f"{index}: {color}")
+\`\`\`
+
+## Вложенные циклы
+
+\`\`\`python
+for i in range(1, 4):
+    for j in range(1, 4):
+        print(f"{i}*{j}={i*j}", end="  ")
+    print()
+\`\`\``,
+            code: '# Перебор чисел\nfor i in range(1, 6):\n    print(f"Число: {i}")',
+            task: 'Используя цикл for и функцию range, выведите числа от **1** до **5**, каждое на новой строке.',
+            hint: 'for i in range(1, 6):\n    print(i)',
+            solution: 'for i in range(1, 6):\n    print(i)',
+            tests: [{ expected: "1\n2\n3\n4\n5" }]
+          }
+        ]
+      },
+      {
+        id: "functions", title: "Функции", icon: "⚡",
+        lessons: [
+          {
+            id: "func-1", title: "Создание функций",
+            description: "Определение и вызов функций",
+            content: `# Функции в Python
+
+## Определение функции
+
+\`\`\`python
+def greet():
+    print("Привет!")
+
+greet()  # Вызов функции
+\`\`\`
+
+## Функция с параметрами
+
+\`\`\`python
+def greet(name):
+    print(f"Привет, {name}!")
+
+greet("Алекс")  # Привет, Алекс!
+\`\`\`
+
+## Возврат значения (return)
+
+\`\`\`python
+def add(a, b):
+    return a + b
+
+result = add(3, 5)
+print(result)  # 8
+\`\`\`
+
+## Параметры по умолчанию
+
+\`\`\`python
+def greet(name, greeting="Привет"):
+    print(f"{greeting}, {name}!")
+
+greet("Алекс")              # Привет, Алекс!
+greet("Боб", "Здравствуй")  # Здравствуй, Боб!
+\`\`\`
+
+## Множественный return
+
+\`\`\`python
+def min_max(numbers):
+    return min(numbers), max(numbers)
+
+lo, hi = min_max([3, 1, 7, 2, 9])
+print(f"Мин: {lo}, Макс: {hi}")
+\`\`\``,
+            code: '# Функция для вычисления квадрата\ndef square(n):\n    return n ** 2\n\nprint(square(4))  # 16\nprint(square(7))  # 49',
+            task: 'Создайте функцию \`multiply\` с двумя параметрами, которая возвращает их произведение. Выведите результат \`multiply(6, 7)\`.',
+            hint: 'def multiply(a, b): return a * b',
+            solution: 'def multiply(a, b):\n    return a * b\n\nprint(multiply(6, 7))',
+            tests: [{ expected: "42" }]
+          },
+          {
+            id: "func-2", title: "*args и **kwargs",
+            description: "Переменное количество аргументов",
+            content: `# *args и **kwargs
+
+## *args — кортеж аргументов
+
+\`\`\`python
+def sum_all(*args):
+    total = 0
+    for num in args:
+        total += num
+    return total
+
+print(sum_all(1, 2, 3))      # 6
+print(sum_all(10, 20, 30, 40)) # 100
+\`\`\`
+
+## **kwargs — словарь аргументов
+
+\`\`\`python
+def print_info(**kwargs):
+    for key, value in kwargs.items():
+        print(f"{key}: {value}")
+
+print_info(name="Алекс", age=25)
+\`\`\`
+
+## Распаковка аргументов
+
+\`\`\`python
+def add(a, b, c):
+    return a + b + c
+
+nums = [1, 2, 3]
+print(add(*nums))  # 6
+\`\`\``,
+            code: '# Функция с *args\ndef multiply_all(*args):\n    result = 1\n    for num in args:\n        result *= num\n    return result\n\nprint(multiply_all(2, 3, 4))  # 24',
+            task: 'Создайте функцию \`sum_all\`, которая принимает любое количество чисел через *args и возвращает их сумму. Выведите \`sum_all(10, 20, 30)\`.',
+            hint: 'def sum_all(*args):\n    return sum(args)',
+            solution: 'def sum_all(*args):\n    return sum(args)\n\nprint(sum_all(10, 20, 30))',
+            tests: [{ expected: "60" }]
+          },
+          {
+            id: "func-3", title: "Lambda и встроенные функции",
+            description: "Анонимные функции и map/filter/sorted",
+            content: `# Lambda-функции
+
+## Синтаксис
+
+\`\`\`python
+square = lambda x: x ** 2
+print(square(5))  # 25
+\`\`\`
+
+## map() — применить функцию
+
+\`\`\`python
+numbers = [1, 2, 3, 4, 5]
+squared = list(map(lambda x: x**2, numbers))
+print(squared)  # [1, 4, 9, 16, 25]
+\`\`\`
+
+## filter() — отфильтровать
+
+\`\`\`python
+numbers = [1, 2, 3, 4, 5, 6, 7, 8]
+evens = list(filter(lambda x: x % 2 == 0, numbers))
+print(evens)  # [2, 4, 6, 8]
+\`\`\`
+
+## sorted() с key
+
+\`\`\`python
+words = ["banana", "apple", "cherry"]
+by_length = sorted(words, key=lambda w: len(w))
+print(by_length)
+\`\`\`
+
+## Встроенные функции
+
+\`\`\`python
+nums = [3, 1, 4, 1, 5, 9]
+print(len(nums))     # 6
+print(sum(nums))     # 23
+print(max(nums))     # 9
+print(min(nums))     # 1
+print(sorted(nums))  # [1, 1, 3, 4, 5, 9]
+\`\`\``,
+            code: '# Lambda и map\nnumbers = [1, 2, 3, 4, 5]\nsquared = list(map(lambda x: x**2, numbers))\nprint(squared)',
+            task: 'Создайте список \`[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\`. С помощью filter и lambda оставьте только числа, кратные 3. Выведите результат.',
+            hint: 'list(filter(lambda x: x % 3 == 0, numbers))',
+            solution: 'numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\nresult = list(filter(lambda x: x % 3 == 0, numbers))\nprint(result)',
+            tests: [{ expected: "[3, 6, 9]" }]
+          }
+        ]
+      },
+      {
+        id: "collections", title: "Коллекции данных", icon: "📚",
+        lessons: [
+          {
+            id: "coll-1", title: "Списки (list)",
+            description: "Упорядоченная изменяемая коллекция",
+            content: `# Списки в Python
+
+## Создание списка
+
+\`\`\`python
+fruits = ["яблоко", "банан", "вишня"]
+numbers = [1, 2, 3, 4, 5]
+mixed = [1, "текст", True, 3.14]
+\`\`\`
+
+## Доступ к элементам
+
+\`\`\`python
+fruits = ["яблоко", "банан", "вишня", "манго"]
+print(fruits[0])    # яблоко
+print(fruits[-1])   # манго
+print(fruits[1:3])  # ['банан', 'вишня']
+\`\`\`
+
+## Изменение списка
+
+\`\`\`python
+fruits.append("вишня")      # добавить
+fruits.insert(1, "манго")   # вставить
+fruits.remove("банан")      # удалить
+fruits.pop()                # удалить последний
+\`\`\`
+
+## List comprehension
+
+\`\`\`python
+squares = [x**2 for x in range(1, 6)]
+print(squares)  # [1, 4, 9, 16, 25]
+
+evens = [x for x in range(10) if x % 2 == 0]
+print(evens)  # [0, 2, 4, 6, 8]
+\`\`\``,
+            code: '# Работа со списками\nfruits = ["apple", "banana", "cherry"]\nfruits.append("date")\nfruits.sort()\nfor fruit in fruits:\n    print(fruit)',
+            task: 'Создайте список \`[5, 3, 8, 1, 9, 2]\`. Отсортируйте его и выведите результат.',
+            hint: 'nums = [5, 3, 8, 1, 9, 2]\nnums.sort()\nprint(nums)',
+            solution: 'nums = [5, 3, 8, 1, 9, 2]\nnums.sort()\nprint(nums)',
+            tests: [{ expected: "[1, 2, 3, 5, 8, 9]" }]
+          },
+          {
+            id: "coll-2", title: "Словари (dict)",
+            description: "Коллекция пар ключ-значение",
+            content: `# Словари (dict)
+
+## Создание словаря
+
+\`\`\`python
+person = {
+    "name": "Алекс",
+    "age": 25,
+    "city": "Москва"
+}
+\`\`\`
+
+## Доступ к значениям
+
+\`\`\`python
+print(person["name"])      # Алекс
+print(person.get("age"))   # 25
+\`\`\`
+
+## Изменение словаря
+
+\`\`\`python
+person["age"] = 26          # изменить
+person["job"] = "Developer" # добавить
+del person["city"]          # удалить
+\`\`\`
+
+## Перебор словаря
+
+\`\`\`python
+for key, value in person.items():
+    print(f"{key}: {value}")
+\`\`\`
+
+## Dictionary comprehension
+
+\`\`\`python
+squares = {x: x**2 for x in range(1, 6)}
+print(squares)  # {1: 1, 2: 4, 3: 9, 4: 16, 5: 25}
+\`\`\``,
+            code: '# Словарь\nperson = {"name": "Python", "year": 1991}\nfor key, value in person.items():\n    print(f"{key}: {value}")',
+            task: 'Создайте словарь \`fruit\` с ключами \`"name"\` (значение \`"apple"\`) и \`"color"\` (значение \`"red"\`). Выведите значение по ключу \`"name"\`.',
+            hint: 'fruit = {"name": "apple", "color": "red"}\nprint(fruit["name"])',
+            solution: 'fruit = {"name": "apple", "color": "red"}\nprint(fruit["name"])',
+            tests: [{ expected: "apple" }]
+          },
+          {
+            id: "coll-3", title: "Множества (set)",
+            description: "Неупорядоченная коллекция уникальных элементов",
+            content: `# Множества (set)
+
+## Создание множества
+
+\`\`\`python
+fruits = {"apple", "banana", "cherry"}
+numbers = set([1, 2, 2, 3, 3, 3])  # {1, 2, 3}
+\`\`\`
+
+## Операции над множествами
+
+\`\`\`python
+a = {1, 2, 3, 4}
+b = {3, 4, 5, 6}
+
+print(a | b)   # {1, 2, 3, 4, 5, 6} — объединение
+print(a & b)   # {3, 4} — пересечение
+print(a - b)   # {1, 2} — разность
+print(a ^ b)   # {1, 2, 5, 6} — симм. разность
+\`\`\`
+
+## Удаление дубликатов
+
+\`\`\`python
+numbers = [1, 2, 2, 3, 3, 3, 4]
+unique = list(set(numbers))
+print(unique)  # [1, 2, 3, 4]
+\`\`\``,
+            code: '# Множества\na = {1, 2, 3, 4, 5}\nb = {4, 5, 6, 7, 8}\nprint("Объединение:", a | b)\nprint("Пересечение:", a & b)\nprint("Разность:", a - b)',
+            task: 'Создайте два множества: \`a = {1, 2, 3, 4, 5}\` и \`b = {3, 4, 5, 6, 7}\`. Выведите их пересечение.',
+            hint: 'print(a & b)',
+            solution: 'a = {1, 2, 3, 4, 5}\nb = {3, 4, 5, 6, 7}\nprint(a & b)',
+            tests: [{ expected: "{3, 4, 5}" }]
+          }
+        ]
+      },
+      {
+        id: "strings", title: "Продвинутые строки", icon: "📝",
+        lessons: [
+          {
+            id: "str-1", title: "Форматирование строк",
+            description: "f-строки, format() и %",
+            content: `# Форматирование строк
+
+## f-строки (Python 3.6+)
+
+\`\`\`python
+name = "Алекс"
+age = 25
+print(f"Меня зовут {name}, мне {age} лет")
+print(f"Через 5 лет: {age + 5}")
+\`\`\`
+
+## Форматирование чисел
+
+\`\`\`python
+pi = 3.14159265
+print(f"Пи: {pi:.2f}")      # 3.14
+print(f"Процент: {0.75:.0%}") # 75%
+print(f"Число: {1000000:,}")  # 1,000,000
+\`\`\`
+
+## Метод format()
+
+\`\`\`python
+print("{:>10}".format("test"))   # выравнивание вправо
+print("{:<10}".format("test"))   # выравнивание влево
+print("{:^10}".format("test"))   # по центру
+print("{:*^10}".format("test"))  # ***test***
+\`\`\``,
+            code: '# Форматирование\nname = "Python"\nversion = 3.12\nprint(f"Язык {name} версии {version:.1f}")',
+            task: 'Создайте переменные \`name = "Python"\` и \`year = 1991\`. Используя f-строку, выведите: **Python was created in 1991**',
+            hint: 'print(f"{name} was created in {year}")',
+            solution: 'name = "Python"\nyear = 1991\nprint(f"{name} was created in {year}")',
+            tests: [{ expected: "Python was created in 1991" }]
+          },
+          {
+            id: "str-2", title: "Методы строк",
+            description: "Полезные методы для работы со строками",
+            content: `# Методы строк
+
+## Поиск и замена
+
+\`\`\`python
+text = "Hello World"
+print(text.find("World"))     # 6
+print(text.count("l"))        # 3
+print(text.replace("World", "Python"))
+\`\`\`
+
+## Проверки
+
+\`\`\`python
+print("hello".isalpha())    # True
+print("12345".isdigit())    # True
+print("HELLO".isupper())    # True
+print("hello".islower())    # True
+\`\`\`
+
+## Разбиение и соединение
+
+\`\`\`python
+text = "apple,banana,cherry"
+parts = text.split(",")
+print(parts)
+
+words = ["Hello", "World"]
+text = " ".join(words)
+print(text)  # Hello World
+\`\`\`
+
+## Обрезка пробелов
+
+\`\`\`python
+text = "  Hello World  "
+print(text.strip())    # "Hello World"
+print(text.lstrip())   # "Hello World  "
+print(text.rstrip())   # "  Hello World"
+\`\`\``,
+            code: '# Методы строк\ntext = "Hello, World!"\nprint(text.upper())\nprint(text.lower())\nprint(text.replace("World", "Python"))\nprint(text.split(", "))\nprint("-".join(["a", "b", "c"]))',
+            task: 'Дана строка \`text = "hello world"\`. Преобразуйте её в заголовный регистр и выведите.',
+            hint: 'Используйте метод title()',
+            solution: 'text = "hello world"\nprint(text.title())',
+            tests: [{ expected: "Hello World" }]
+          }
+        ]
+      },
+      {
+        id: "errors", title: "Обработка ошибок", icon: "🛡️",
+        lessons: [
+          {
+            id: "err-1", title: "try/except",
+            description: "Обработка исключений",
+            content: `# Обработка ошибок (try/except)
+
+## Базовый try/except
+
+\`\`\`python
+try:
+    number = int("abc")
+except ValueError:
+    print("Ошибка: не удалось преобразовать")
+\`\`\`
+
+## Несколько except
+
+\`\`\`python
+try:
+    result = 10 / 0
+except ZeroDivisionError:
+    print("Деление на ноль!")
+except TypeError:
+    print("Неверный тип данных!")
+except Exception as e:
+    print(f"Ошибка: {e}")
+\`\`\`
+
+## try/except/else/finally
+
+\`\`\`python
+try:
+    number = int("42")
+except ValueError:
+    print("Ошибка!")
+else:
+    print(f"Успех! Число: {number}")
+finally:
+    print("Выполняется всегда")
+\`\`\`
+
+## Генерация исключений (raise)
+
+\`\`\`python
+def set_age(age):
+    if age < 0:
+        raise ValueError("Возраст не может быть отрицательным")
+    return age
+\`\`\``,
+            code: '# Обработка ошибок\ntry:\n    result = 10 / 2\n    print(f"Результат: {result}")\nexcept ZeroDivisionError:\n    print("Ошибка: деление на ноль!")\nfinally:\n    print("Выполнение завершено")',
+            task: 'Напишите код, который пытается преобразовать строку \`"hello"\` в число. Обработайте \`ValueError\` и выведите **Error caught!**',
+            hint: 'try:\n    int("hello")\nexcept ValueError:\n    print("Error caught!")',
+            solution: 'try:\n    int("hello")\nexcept ValueError:\n    print("Error caught!")',
+            tests: [{ expected: "Error caught!" }]
+          }
+        ]
+      },
+      {
+        id: "oop", title: "ООП", icon: "🏗️",
+        lessons: [
+          {
+            id: "oop-1", title: "Классы и объекты",
+            description: "Основы ООП в Python",
+            content: `# Классы и объекты
+
+## Создание класса
+
+\`\`\`python
+class Dog:
+    def __init__(self, name, breed):
+        self.name = name
+        self.breed = breed
+
+    def bark(self):
+        return f"{self.name}: Гав!"
+
+my_dog = Dog("Рекс", "Овчарка")
+print(my_dog.name)    # Рекс
+print(my_dog.bark())  # Рекс: Гав!
+\`\`\`
+
+## Атрибуты класса
+
+\`\`\`python
+class Circle:
+    pi = 3.14159
+
+    def __init__(self, radius):
+        self.radius = radius
+
+    def area(self):
+        return self.pi * self.radius ** 2
+
+c = Circle(5)
+print(c.area())  # 78.53975
+\`\`\`
+
+## Метод __str__
+
+\`\`\`python
+class Book:
+    def __init__(self, title, author):
+        self.title = title
+        self.author = author
+
+    def __str__(self):
+        return f"{self.title} by {self.author}"
+
+b = Book("Python 101", "Guido")
+print(b)  # Python 101 by Guido
+\`\`\``,
+            code: '# Класс Dog\nclass Dog:\n    def __init__(self, name):\n        self.name = name\n    \n    def bark(self):\n        return f"{self.name}: Woof!"\n\ndog = Dog("Buddy")\nprint(dog.bark())',
+            task: 'Создайте класс \`Cat\` с параметром \`name\` и методом \`meow\`, возвращающим \`"name: Meow!"\`. Создайте объект с именем **Whiskers** и выведите \`meow()\`.',
+            hint: 'class Cat:\n    def __init__(self, name):\n        self.name = name\n    def meow(self):\n        return f"{self.name}: Meow!"',
+            solution: 'class Cat:\n    def __init__(self, name):\n        self.name = name\n    \n    def meow(self):\n        return f"{self.name}: Meow!"\n\ncat = Cat("Whiskers")\nprint(cat.meow())',
+            tests: [{ expected: "Whiskers: Meow!" }]
+          },
+          {
+            id: "oop-2", title: "Наследование",
+            description: "Создание подклассов",
+            content: `# Наследование
+
+## Базовое наследование
+
+\`\`\`python
+class Animal:
+    def __init__(self, name):
+        self.name = name
+
+    def speak(self):
+        return "..."
+
+class Dog(Animal):
+    def speak(self):
+        return f"{self.name}: Гав!"
+
+class Cat(Animal):
+    def speak(self):
+        return f"{self.name}: Мяу!"
+
+dog = Dog("Рекс")
+print(dog.speak())  # Рекс: Гав!
+\`\`\`
+
+## super() — вызов метода родителя
+
+\`\`\`python
+class Animal:
+    def __init__(self, name, species):
+        self.name = name
+        self.species = species
+
+class Dog(Animal):
+    def __init__(self, name, breed):
+        super().__init__(name, "Собака")
+        self.breed = breed
+\`\`\`
+
+## Полиморфизм
+
+\`\`\`python
+animals = [Dog("Рекс", "Овчарка"), Cat("Мурка")]
+for animal in animals:
+    print(animal.speak())
+\`\`\``,
+            code: '# Наследование\nclass Animal:\n    def __init__(self, name):\n        self.name = name\n    def speak(self):\n        return "..."\n\nclass Dog(Animal):\n    def speak(self):\n        return f"{self.name}: Woof!"\n\nclass Cat(Animal):\n    def speak(self):\n        return f"{self.name}: Meow!"\n\npets = [Dog("Rex"), Cat("Kitty")]\nfor pet in pets:\n    print(pet.speak())',
+            task: 'Создайте класс \`Vehicle\` с методом \`move\`, возвращающим \`"Moving..."\`. Создайте подкласс \`Car\`, переопределяющий \`move\` для возврата \`"Driving..."\`. Выведите результат.',
+            hint: 'class Car(Vehicle):\n    def move(self):\n        return "Driving..."',
+            solution: 'class Vehicle:\n    def move(self):\n        return "Moving..."\n\nclass Car(Vehicle):\n    def move(self):\n        return "Driving..."\n\ncar = Car()\nprint(car.move())',
+            tests: [{ expected: "Driving..." }]
+          }
+        ]
+      },
+      {
+        id: "advanced", title: "Продвинутые темы", icon: "🚀",
+        lessons: [
+          {
+            id: "adv-1", title: "Генераторы",
+            description: "yield и генераторные выражения",
+            content: `# Генераторы
+
+## Функция с yield
+
+\`\`\`python
+def count_up(n):
+    i = 0
+    while i < n:
+        yield i
+        i += 1
+
+for num in count_up(5):
+    print(num)  # 0, 1, 2, 3, 4
+\`\`\`
+
+## Генераторные выражения
+
+\`\`\`python
+# List comprehension
+squares_list = [x**2 for x in range(5)]
+
+# Generator expression (экономит память)
+squares_gen = (x**2 for x in range(5))
+\`\`\`
+
+## Бесконечный генератор
+
+\`\`\`python
+def fibonacci():
+    a, b = 0, 1
+    while True:
+        yield a
+        a, b = b, a + b
+
+fib = fibonacci()
+print(next(fib))  # 0
+print(next(fib))  # 1
+print(next(fib))  # 1
+\`\`\``,
+            code: '# Генератор\ndef countdown(n):\n    while n > 0:\n        yield n\n        n -= 1\n\nfor num in countdown(5):\n    print(num)',
+            task: 'Создайте генератор \`even_numbers\`, который выдаёт чётные числа от 0 до limit. Выведите значения для \`even_numbers(10)\`.',
+            hint: 'def even_numbers(limit):\n    for i in range(0, limit, 2):\n        yield i',
+            solution: 'def even_numbers(limit):\n    for i in range(0, limit, 2):\n        yield i\n\nfor num in even_numbers(10):\n    print(num)',
+            tests: [{ expected: "0\n2\n4\n6\n8" }]
+          },
+          {
+            id: "adv-2", title: "Декораторы",
+            description: "Модификация поведения функций",
+            content: `# Декораторы
+
+## Базовый декоратор
+
+\`\`\`python
+def my_decorator(func):
+    def wrapper():
+        print("До вызова")
+        func()
+        print("После вызова")
+    return wrapper
+
+@my_decorator
+def say_hello():
+    print("Привет!")
+\`\`\`
+
+## Декоратор с аргументами
+
+\`\`\`python
+def repeat(times):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            for _ in range(times):
+                func(*args, **kwargs)
+        return wrapper
+    return decorator
+
+@repeat(3)
+def greet(name):
+    print(f"Привет, {name}!")
+\`\`\`
+
+## Практический пример
+
+\`\`\`python
+def timer(func):
+    def wrapper(*args, **kwargs):
+        import time
+        start = time.time()
+        result = func(*args, **kwargs)
+        print(f"{func.__name__}: {time.time()-start:.4f} сек")
+        return result
+    return wrapper
+\`\`\``,
+            code: '# Простой декоратор\ndef uppercase_decorator(func):\n    def wrapper():\n        result = func()\n        return result.upper()\n    return wrapper\n\n@uppercase_decorator\ndef greet():\n    return "hello world"\n\nprint(greet())',
+            task: 'Создайте декоратор \`exclaim\`, добавляющий \`"!"\` к результату. Примените к функции \`greet\`, возвращающей \`"hello"\`. Выведите результат.',
+            hint: 'def exclaim(func):\n    def wrapper():\n        return func() + "!"\n    return wrapper',
+            solution: 'def exclaim(func):\n    def wrapper():\n        return func() + "!"\n    return wrapper\n\n@exclaim\ndef greet():\n    return "hello"\n\nprint(greet())',
+            tests: [{ expected: "hello!" }]
+          }
+        ]
+      },
+      {
+        id: "modules", title: "Модули", icon: "📦",
+        lessons: [
+          {
+            id: "mod-1", title: "Импорт модулей",
+            description: "Организация кода в модули",
+            content: `# Модули и пакеты
+
+## Импорт модуля
+
+\`\`\`python
+import math
+print(math.pi)       # 3.14159...
+print(math.sqrt(16)) # 4.0
+\`\`\`
+
+## Импорт конкретного имени
+
+\`\`\`python
+from math import pi, sqrt
+print(pi)
+print(sqrt(16))
+\`\`\`
+
+## Модуль math
+
+\`\`\`python
+import math
+print(math.ceil(3.2))    # 4
+print(math.floor(3.8))   # 3
+print(math.factorial(5)) # 120
+print(math.gcd(12, 8))   # 4
+\`\`\`
+
+## Модуль random
+
+\`\`\`python
+import random
+print(random.randint(1, 10))
+print(random.choice([1, 2, 3]))
+\`\`\`
+
+## Создание своего модуля
+
+\`\`\`python
+# mymodule.py
+def greet(name):
+    return f"Привет, {name}!"
+
+PI = 3.14159
+
+# main.py
+import mymodule
+print(mymodule.greet("Алекс"))
+\`\`\``,
+            code: '# Работа с модулями\nimport math\n\nprint(f"Pi = {math.pi:.4f}")\nprint(f"sqrt(144) = {math.sqrt(144)}")\nprint(f"factorial(6) = {math.factorial(6)}")',
+            task: 'Импортируйте модуль \`math\` и выведите значение \`math.pi\`, округлённое до 2 знаков.',
+            hint: 'import math\nprint(round(math.pi, 2))',
+            solution: 'import math\nprint(round(math.pi, 2))',
+            tests: [{ expected: "3.14" }]
+          }
+        ]
+      },
+      {
+        id: "practice", title: "Практические задачи", icon: "🎯",
+        lessons: [
+          {
+            id: "prac-1", title: "FizzBuzz",
+            description: "Классическая задача на условия и циклы",
+            content: `# Задача FizzBuzz
+
+## Условие
+
+Для чисел от 1 до n:
+- Делится на **3** → "Fizz"
+- Делится на **5** → "Buzz"
+- На 3 и 5 → "FizzBuzz"
+- Иначе → число
+
+## Решение
+
+\`\`\`python
+def fizzbuzz(n):
+    for i in range(1, n + 1):
+        if i % 15 == 0:
+            print("FizzBuzz")
+        elif i % 3 == 0:
+            print("Fizz")
+        elif i % 5 == 0:
+            print("Buzz")
+        else:
+            print(i)
+\`\`\`
+
+## Что проверяется?
+
+- ✅ Понимание условий
+- ✅ Понимание циклов
+- ✅ Остаток от деления
+- ✅ Логическое мышление`,
+            code: '# FizzBuzz от 1 до 15\nfor i in range(1, 16):\n    if i % 15 == 0:\n        print("FizzBuzz")\n    elif i % 3 == 0:\n        print("Fizz")\n    elif i % 5 == 0:\n        print("Buzz")\n    else:\n        print(i)',
+            task: 'Реализуйте FizzBuzz для чисел от 1 до **5**. Выведите результат.',
+            hint: 'Для чисел 1-5: 1, 2, Fizz, 4, Buzz',
+            solution: 'for i in range(1, 6):\n    if i % 15 == 0:\n        print("FizzBuzz")\n    elif i % 3 == 0:\n        print("Fizz")\n    elif i % 5 == 0:\n        print("Buzz")\n    else:\n        print(i)',
+            tests: [{ expected: "1\n2\nFizz\n4\nBuzz" }]
+          },
+          {
+            id: "prac-2", title: "Палиндром",
+            description: "Проверка строки на палиндром",
+            content: `# Проверка на палиндром
+
+## Простое решение
+
+\`\`\`python
+def is_palindrome(text):
+    cleaned = text.lower().replace(" ", "")
+    return cleaned == cleaned[::-1]
+
+print(is_palindrome("А роза упала на лапу Азора"))  # True
+print(is_palindrome("hello"))  # False
+\`\`\`
+
+## Числовой палиндром
+
+\`\`\`python
+def is_number_palindrome(n):
+    s = str(n)
+    return s == s[::-1]
+
+print(is_number_palindrome(121))   # True
+print(is_number_palindrome(123))   # False
+\`\`\`
+
+## Поиск палиндромов
+
+\`\`\`python
+def find_palindromes(words):
+    return [w for w in words if w == w[::-1]]
+
+words = ["level", "hello", "radar", "madam"]
+print(find_palindromes(words))
+\`\`\``,
+            code: '# Проверка палиндрома\ndef is_palindrome(text):\n    cleaned = text.lower().replace(" ", "")\n    return cleaned == cleaned[::-1]\n\nwords = ["level", "hello", "radar", "python", "madam"]\nfor word in words:\n    print(f"{word}: {is_palindrome(word)}")',
+            task: 'Напишите функцию \`is_palindrome\`. Выведите результат для строки **"Aba"**.',
+            hint: 'Очистите строку и сравните с реверсом',
+            solution: 'def is_palindrome(text):\n    cleaned = text.lower().replace(" ", "")\n    return cleaned == cleaned[::-1]\n\nprint(is_palindrome("Aba"))',
+            tests: [{ expected: "True" }]
+          },
+          {
+            id: "prac-3", title: "Подсчёт слов",
+            description: "Анализ текста: частота слов",
+            content: `# Подсчёт частоты слов
+
+## Базовое решение
+
+\`\`\`python
+text = "the cat sat on the mat the cat"
+words = text.lower().split()
+
+word_count = {}
+for word in words:
+    word_count[word] = word_count.get(word, 0) + 1
+
+for word, count in sorted(word_count.items()):
+    print(f"{word}: {count}")
+\`\`\`
+
+## С Counter
+
+\`\`\`python
+from collections import Counter
+
+text = "the cat sat on the mat the cat"
+words = text.lower().split()
+counter = Counter(words)
+
+print(counter.most_common(3))
+\`\`\`
+
+## Статистика текста
+
+\`\`\`python
+def text_stats(text):
+    words = text.split()
+    return {
+        "words": len(words),
+        "chars": len(text),
+        "avg_len": sum(len(w) for w in words) / len(words)
+    }
+\`\`\``,
+            code: '# Подсчёт слов\nfrom collections import Counter\n\ntext = "python is great python is fun python"\nwords = text.split()\ncounter = Counter(words)\n\nfor word, count in counter.most_common():\n    print(f"{word}: {count}")',
+            task: 'Дан текст \`"cat dog cat bird dog cat"\`. Выведите самое частое слово в формате: **cat: 3**',
+            hint: 'Используйте Counter и most_common(1)',
+            solution: 'from collections import Counter\n\ntext = "cat dog cat bird dog cat"\nwords = text.split()\ncounter = Counter(words)\nword, count = counter.most_common(1)[0]\nprint(f"{word}: {count}")',
+            tests: [{ expected: "cat: 3" }]
+          }
+        ]
+      }
+    ];
+
+    // ==================== PYTHON EXECUTOR ====================
+    function executePython(code) {
+      const output = [];
+      try {
+        const lines = code.split('\n');
+        const variables = {};
+        const functions = {};
+
+        const imports = {
+          'math': {
+            pi: Math.PI, sqrt: (x) => Math.sqrt(x), ceil: (x) => Math.ceil(x),
+            floor: (x) => Math.floor(x),
+            factorial: (n) => { let r = 1; for (let i = 2; i <= n; i++) r *= i; return r; },
+            gcd: (a, b) => { while (b) { [a, b] = [b, a % b]; } return a; },
+            log: (x, base) => base ? Math.log(x) / Math.log(base) : Math.log(x),
+            abs: Math.abs,
+          },
+          'json': {
+            dumps: (obj) => JSON.stringify(obj),
+            loads: (s) => JSON.parse(s),
+          },
+          'random': {
+            randint: (a, b) => Math.floor(Math.random() * (b - a + 1)) + a,
+            choice: (arr) => arr[Math.floor(Math.random() * arr.length)],
+            random: () => Math.random(),
+          },
+          'collections': {
+            Counter: (arr) => {
+              const c = {};
+              arr.forEach(x => { c[x] = (c[x] || 0) + 1; });
+              const result = Object.assign({}, c);
+              result.most_common = (n) => {
+                const sorted = Object.entries(c).sort((a, b) => b[1] - a[1]);
+                return n ? sorted.slice(0, n) : sorted;
+              };
+              return result;
+            }
+          },
+          'contextlib': { contextmanager: (fn) => fn }
+        };
+
+        function splitArgs(str) {
+          const result = [];
+          let current = '';
+          let depth = 0;
+          let inString = false;
+          let stringChar = '';
+          for (let i = 0; i < str.length; i++) {
+            const ch = str[i];
+            if (inString) {
+              current += ch;
+              if (ch === stringChar && str[i-1] !== '\\') inString = false;
+            } else if (ch === '"' || ch === "'") {
+              inString = true; stringChar = ch; current += ch;
+            } else if (ch === '(' || ch === '[' || ch === '{') {
+              depth++; current += ch;
+            } else if (ch === ')' || ch === ']' || ch === '}') {
+              depth--; current += ch;
+            } else if (ch === ',' && depth === 0) {
+              result.push(current); current = '';
+            } else { current += ch; }
+          }
+          if (current.trim()) result.push(current);
+          return result;
+        }
+
+        function evaluateExpression(expr) {
+          expr = expr.trim();
+          if ((expr.startsWith('"') && expr.endsWith('"')) || (expr.startsWith("'") && expr.endsWith("'"))) {
+            return expr.slice(1, -1);
+          }
+          if (expr.startsWith('f"') || expr.startsWith("f'")) {
+            let s = expr.slice(2, -1);
+            s = s.replace(/\{([^}]+)\}/g, (_, inner) => String(evaluateExpression(inner)));
+            return s;
+          }
+          if (expr === 'True') return true;
+          if (expr === 'False') return false;
+          if (expr === 'None') return null;
+          if (/^-?\d+(\.\d+)?$/.test(expr)) return parseFloat(expr);
+
+          if (expr.startsWith('[') && expr.endsWith(']')) {
+            const inner = expr.slice(1, -1).trim();
+            if (inner === '') return [];
+            return splitArgs(inner).map(item => evaluateExpression(item.trim()));
+          }
+
+          if (expr.startsWith('{') && expr.endsWith('}')) {
+            const inner = expr.slice(1, -1).trim();
+            if (inner === '') return {};
+            if (inner.includes(':')) {
+              const result = {};
+              splitArgs(inner).forEach(pair => {
+                const colonIdx = pair.indexOf(':');
+                if (colonIdx > -1) {
+                  const key = evaluateExpression(pair.slice(0, colonIdx).trim());
+                  const val = evaluateExpression(pair.slice(colonIdx + 1).trim());
+                  result[String(key)] = val;
+                }
+              });
+              return result;
+            } else {
+              return new Set(splitArgs(inner).map(item => evaluateExpression(item.trim())));
+            }
+          }
+
+          if (expr.startsWith('(') && expr.endsWith(')') && expr.includes(',')) {
+            return splitArgs(expr.slice(1, -1).trim()).map(item => evaluateExpression(item.trim()));
+          }
+
+          // List/set operations
+          const setOpMatch = expr.match(/^(.+)\s+([&|^])\s+(.+)$/);
+          if (setOpMatch) {
+            const a = evaluateExpression(setOpMatch[1]);
+            const b = evaluateExpression(setOpMatch[3]);
+            const setA = a instanceof Set ? a : new Set(Array.isArray(a) ? a : [a]);
+            const setB = b instanceof Set ? b : new Set(Array.isArray(b) ? b : [b]);
+            switch (setOpMatch[2]) {
+              case '&': return new Set([...setA].filter(x => setB.has(x)));
+              case '|': return new Set([...setA, ...setB]);
+              case '-': return new Set([...setA].filter(x => !setB.has(x)));
+              case '^': return new Set([...[...setA].filter(x => !setB.has(x)), ...[...setB].filter(x => !setA.has(x))]);
+            }
+          }
+
+          // Comparisons
+          for (const op of ['==', '!=', '>=', '<=', '>', '<']) {
+            const idx = expr.indexOf(op);
+            if (idx > 0) {
+              const left = evaluateExpression(expr.slice(0, idx));
+              const right = evaluateExpression(expr.slice(idx + op.length));
+              switch (op) {
+                case '==': return left == right;
+                case '!=': return left != right;
+                case '>=': return left >= right;
+                case '<=': return left <= right;
+                case '>': return left > right;
+                case '<': return left < right;
+              }
+            }
+          }
+
+          // Boolean operators
+          if (expr.includes(' and ')) {
+            const parts = expr.split(' and ');
+            return parts.every(p => evaluateExpression(p));
+          }
+          if (expr.includes(' or ')) {
+            const parts = expr.split(' or ');
+            return parts.some(p => evaluateExpression(p));
+          }
+          if (expr.startsWith('not ')) {
+            return !evaluateExpression(expr.slice(4));
+          }
+
+          // Arithmetic
+          for (const op of ['**', '//', '%', '+', '-', '*', '/']) {
+            let idx = -1;
+            if (op === '**') idx = expr.lastIndexOf('**');
+            else if (op === '//') idx = expr.lastIndexOf('//');
+            else {
+              for (let i = expr.length - 1; i >= 1; i--) {
+                if (expr[i] === op && expr[i-1] !== op && (i+1 >= expr.length || expr[i+1] !== op)) {
+                  idx = i; break;
+                }
+              }
+            }
+            if (idx > 0) {
+              const left = evaluateExpression(expr.slice(0, idx));
+              const right = evaluateExpression(expr.slice(idx + op.length));
+              switch (op) {
+                case '+': return typeof left === 'string' || typeof right === 'string' ? String(left) + String(right) : left + right;
+                case '-': return left - right;
+                case '*': return typeof left === 'string' ? left.repeat(right) : left * right;
+                case '/': return left / right;
+                case '//': return Math.floor(left / right);
+                case '%': return left % right;
+                case '**': return Math.pow(left, right);
+              }
+            }
+          }
+
+          // Method calls
+          const methodMatch = expr.match(/^(.+)\.(upper|lower|title|strip|lstrip|rstrip|replace|split|join|find|count|startswith|endswith|isdigit|isalpha|isupper|islower|items|keys|values|append|sort|reverse|pop|remove|insert|extend|most_common)\((.*)?\)$/);
+          if (methodMatch) {
+            const obj = evaluateExpression(methodMatch[1]);
+            const method = methodMatch[2];
+            const argsStr = methodMatch[3] || '';
+            const args = argsStr ? splitArgs(argsStr).map(a => evaluateExpression(a.trim())) : [];
+
+            switch (method) {
+              case 'upper': return String(obj).toUpperCase();
+              case 'lower': return String(obj).toLowerCase();
+              case 'title': return String(obj).replace(/\w\S*/g, t => t.charAt(0).toUpperCase() + t.substr(1).toLowerCase());
+              case 'strip': return String(obj).trim();
+              case 'lstrip': return String(obj).replace(/^\s+/, '');
+              case 'rstrip': return String(obj).replace(/\s+$/, '');
+              case 'replace': return String(obj).split(String(args[0])).join(String(args[1]));
+              case 'split': return String(obj).split(args[0] !== undefined ? String(args[0]) : ' ');
+              case 'join': return Array.isArray(args[0]) ? args[0].join(String(obj)) : (Array.isArray(obj) ? obj.join(String(args[0] || '')) : '');
+              case 'find': return String(obj).indexOf(String(args[0]));
+              case 'count': return typeof obj === 'string' ? String(obj).split(String(args[0])).length - 1 : (Array.isArray(obj) ? obj.filter(x => x === args[0]).length : 0);
+              case 'startswith': return String(obj).startsWith(String(args[0]));
+              case 'endswith': return String(obj).endsWith(String(args[0]));
+              case 'isdigit': return /^\d+$/.test(String(obj));
+              case 'isalpha': return /^[a-zA-Zа-яА-Я]+$/.test(String(obj));
+              case 'isupper': return String(obj) === String(obj).toUpperCase() && /[a-zA-Zа-яА-Я]/.test(String(obj));
+              case 'islower': return String(obj) === String(obj).toLowerCase() && /[a-zA-Zа-яА-Я]/.test(String(obj));
+              case 'items': return Object.entries(obj);
+              case 'keys': return Object.keys(obj);
+              case 'values': return Object.values(obj);
+              case 'append': if (Array.isArray(obj)) { obj.push(args[0]); return obj; } return obj;
+              case 'sort': if (Array.isArray(obj)) { obj.sort((a, b) => a - b); return obj; } return obj;
+              case 'reverse': if (Array.isArray(obj)) { obj.reverse(); return obj; } return obj;
+              case 'pop': if (Array.isArray(obj)) return obj.splice(args[0] || obj.length - 1, 1)[0]; return obj;
+              case 'remove': if (Array.isArray(obj)) { const idx = obj.indexOf(args[0]); if (idx > -1) obj.splice(idx, 1); } return obj;
+              case 'insert': if (Array.isArray(obj)) obj.splice(args[0], 0, args[1]); return obj;
+              case 'extend': if (Array.isArray(obj) && Array.isArray(args[0])) obj.push(...args[0]); return obj;
+              case 'most_common': if (obj && obj.most_common) return obj.most_common(args[0]); return [];
+            }
+          }
+
+          // Function calls
+          const funcMatch = expr.match(/^(\w+)\((.*)?\)$/);
+          if (funcMatch) {
+            const funcName = funcMatch[1];
+            const argsStr = funcMatch[2] || '';
+            const args = argsStr ? splitArgs(argsStr).map(a => evaluateExpression(a.trim())) : [];
+
+            switch (funcName) {
+              case 'print': return args.join(' ');
+              case 'len':
+                if (typeof args[0] === 'string') return args[0].length;
+                if (Array.isArray(args[0])) return args[0].length;
+                if (args[0] instanceof Set) return args[0].size;
+                if (typeof args[0] === 'object' && args[0] !== null) return Object.keys(args[0]).length;
+                return 0;
+              case 'str': return String(args[0]);
+              case 'int': return parseInt(String(args[0]));
+              case 'float': return parseFloat(String(args[0]));
+              case 'bool': return Boolean(args[0]);
+              case 'abs': return Math.abs(args[0]);
+              case 'round': return args.length > 1 ? Number(args[0].toFixed(args[1])) : Math.round(args[0]);
+              case 'max': return Array.isArray(args[0]) ? Math.max(...args[0]) : Math.max(...args);
+              case 'min': return Array.isArray(args[0]) ? Math.min(...args[0]) : Math.min(...args);
+              case 'sum': return Array.isArray(args[0]) ? args[0].reduce((a, b) => a + b, 0) : args[0];
+              case 'sorted': {
+                const arr = Array.isArray(args[0]) ? [...args[0]] : [];
+                arr.sort((a, b) => a - b);
+                return arr;
+              }
+              case 'list': return Array.isArray(args[0]) ? args[0] : (args[0] instanceof Set ? [...args[0]] : []);
+              case 'set': return new Set(Array.isArray(args[0]) ? args[0] : []);
+              case 'tuple': return Array.isArray(args[0]) ? args[0] : [];
+              case 'type': return `<class '${typeof args[0]}'>`;
+              case 'range': {
+                const start = args.length === 1 ? 0 : args[0];
+                const end = args.length === 1 ? args[0] : args[1];
+                const step = args.length === 3 ? args[2] : 1;
+                const result = [];
+                for (let i = start; step > 0 ? i < end : i > end; i += step) result.push(i);
+                return result;
+              }
+              case 'map': {
+                if (args.length >= 2 && Array.isArray(args[1])) {
+                  // Simple lambda simulation
+                  return args[1];
+                }
+                return [];
+              }
+              case 'filter': {
+                if (args.length >= 2 && Array.isArray(args[1])) {
+                  return args[1];
+                }
+                return [];
+              }
+              case 'enumerate': {
+                if (Array.isArray(args[0])) return args[0].map((v, i) => [i, v]);
+                return [];
+              }
+              case 'reversed': {
+                if (Array.isArray(args[0])) return [...args[0]].reverse();
+                return [];
+              }
+              case 'isinstance': return true;
+              case 'next': return args[0];
+              default:
+                if (functions[funcName]) return functions[funcName](...args);
+                if (variables[funcName] && typeof variables[funcName] === 'function') return variables[funcName](...args);
+            }
+          }
+
+          // Module access
+          const moduleCallMatch = expr.match(/^(\w+)\.(\w+)\((.*)?\)$/);
+          if (moduleCallMatch) {
+            const modName = moduleCallMatch[1];
+            const method = moduleCallMatch[2];
+            const argsStr = moduleCallMatch[3] || '';
+            const args = argsStr ? splitArgs(argsStr).map(a => evaluateExpression(a.trim())) : [];
+            if (variables[modName] && typeof variables[modName] === 'object') {
+              const fn = variables[modName][method];
+              if (typeof fn === 'function') return fn(...args);
+            }
+          }
+
+          const moduleMatch = expr.match(/^(\w+)\.(\w+)$/);
+          if (moduleMatch) {
+            if (variables[moduleMatch[1]] && typeof variables[moduleMatch[1]] === 'object') {
+              return variables[moduleMatch[1]][moduleMatch[2]];
+            }
+          }
+
+          // Variable lookup
+          if (variables.hasOwnProperty(expr)) return variables[expr];
+
+          // Negative number
+          if (expr.startsWith('-') && /^-?\d+(\.\d+)?$/.test(expr.slice(1))) {
+            return parseFloat(expr);
+          }
+
+          return expr;
+        }
+
+        function formatValue(val) {
+          if (val === null || val === undefined) return 'None';
+          if (val === true) return 'True';
+          if (val === false) return 'False';
+          if (typeof val === 'string') return val;
+          if (typeof val === 'number') return Number.isInteger(val) ? String(val) : String(val);
+          if (Array.isArray(val)) return '[' + val.map(formatValue).join(', ') + ']';
+          if (val instanceof Set) return '{' + [...val].map(formatValue).join(', ') + '}';
+          if (typeof val === 'object') {
+            const entries = Object.entries(val).filter(([k]) => k !== 'most_common').map(([k, v]) => `${formatValue(k)}: ${formatValue(v)}`);
+            return '{' + entries.join(', ') + '}';
+          }
+          return String(val);
+        }
+
+        // Process lines
+        let i = 0;
+        while (i < lines.length) {
+          const line = lines[i];
+          const trimmed = line.trim();
+
+          if (trimmed === '' || trimmed.startsWith('#') || trimmed.startsWith('"""') || trimmed.startsWith("'''")) {
+            i++; continue;
+          }
+
+          // Import
+          if (trimmed.startsWith('import ')) {
+            const modName = trimmed.replace('import ', '').trim();
+            if (imports[modName]) variables[modName] = imports[modName];
+            i++; continue;
+          }
+          if (trimmed.startsWith('from ')) {
+            const match = trimmed.match(/from (\w+) import (.+)/);
+            if (match && imports[match[1]]) {
+              const names = match[2].split(',').map(s => s.trim());
+              for (const name of names) {
+                if (name === '*') Object.assign(variables, imports[match[1]]);
+                else variables[name] = imports[match[1]][name];
+              }
+            }
+            i++; continue;
+          }
+
+          // Class definition
+          if (trimmed.startsWith('class ')) {
+            const className = trimmed.match(/class (\w+)/)?.[1] || '';
+            const classBody = [];
+            i++;
+            while (i < lines.length && (lines[i].startsWith('    ') || lines[i].startsWith('\t') || lines[i].trim() === '')) {
+              if (lines[i].trim() !== '') classBody.push(lines[i].trim());
+              i++;
+            }
+
+            const initMatch = classBody.find(l => l.startsWith('def __init__'));
+
+            variables[className] = (...args) => {
+              const obj = { __class__: className };
+              if (initMatch) {
+                const params = initMatch.match(/\(self,?\s*(.*)\)/)?.[1] || '';
+                const paramNames = params ? params.split(',').map(p => p.trim().split('=')[0].trim()) : [];
+                for (let j = 0; j < paramNames.length; j++) obj[paramNames[j]] = args[j];
+              }
+
+              // Add methods
+              for (const bodyLine of classBody) {
+                const methodMatch = bodyLine.match(/def (\w+)\(self\):/);
+                if (methodMatch && methodMatch[1] !== '__init__') {
+                  const methodName = methodMatch[1];
+                  const methodLines = [];
+                  let inMethod = false;
+                  for (const bl of classBody) {
+                    if (bl.startsWith(`def ${methodName}`)) { inMethod = true; continue; }
+                    if (inMethod) {
+                      if (bl.startsWith('def ')) break;
+                      methodLines.push(bl);
+                    }
+                  }
+
+                  obj[methodName] = () => {
+                    for (const ml of methodLines) {
+                      if (ml.trim().startsWith('return ')) {
+                        let returnExpr = ml.trim().slice(7);
+                        returnExpr = returnExpr.replace(/f"([^"]*)"/, (_, template) => {
+                          let s = template;
+                          s = s.replace(/\{self\.(\w+)\}/g, (_, prop) => String(obj[prop]));
+                          s = s.replace(/\{([^}]+)\}/g, (_, expr) => {
+                            try { return String(evaluateExpression(expr)); } catch { return expr; }
+                          });
+                          return `"${s}"`;
+                        });
+                        return evaluateExpression(returnExpr);
+                      }
+                    }
+                    return undefined;
+                  };
+                }
+              }
+              return obj;
+            };
+            continue;
+          }
+
+          // Function definition
+          if (trimmed.startsWith('def ')) {
+            const funcMatch = trimmed.match(/def (\w+)\(([^)]*)\):/);
+            if (funcMatch) {
+              const funcName = funcMatch[1];
+              const params = funcMatch[2] ? funcMatch[2].split(',').map(p => p.trim().split('=')[0].replace('*', '')) : [];
+              const bodyLines = [];
+              i++;
+              while (i < lines.length && (lines[i].startsWith('    ') || lines[i].startsWith('\t') || lines[i].trim() === '')) {
+                if (lines[i].trim() !== '') bodyLines.push(lines[i].replace(/^    /, '').replace(/^\t/, ''));
+                i++;
+              }
+
+              functions[funcName] = (...args) => {
+                const localVars = { ...variables };
+                for (let j = 0; j < params.length; j++) localVars[params[j]] = args[j];
+
+                let result = undefined;
+                for (const bLine of bodyLines) {
+                  const bTrimmed = bLine.trim();
+                  if (bTrimmed.startsWith('return ')) {
+                    const savedVars = { ...variables };
+                    Object.assign(variables, localVars);
+                    result = evaluateExpression(bTrimmed.slice(7));
+                    Object.assign(variables, savedVars);
+                    return result;
+                  } else if (bTrimmed.startsWith('print(')) {
+                    const savedVars = { ...variables };
+                    Object.assign(variables, localVars);
+                    const val = evaluateExpression(bTrimmed.slice(6, -1));
+                    output.push(formatValue(val));
+                    Object.assign(variables, savedVars);
+                  } else if (bTrimmed.includes('=') && !bTrimmed.includes('==')) {
+                    const savedVars = { ...variables };
+                    Object.assign(variables, localVars);
+                    const eqIdx = bTrimmed.indexOf('=');
+                    localVars[bTrimmed.slice(0, eqIdx).trim()] = evaluateExpression(bTrimmed.slice(eqIdx + 1).trim());
+                    Object.assign(variables, savedVars);
+                  }
+                }
+                return result;
+              };
+            }
+            continue;
+          }
+
+          // For loop
+          if (trimmed.startsWith('for ')) {
+            const forMatch = trimmed.match(/for (\w+)(?:,\s*(\w+))?\s+in\s+(.+):/);
+            if (forMatch) {
+              const loopVar = forMatch[1];
+              const loopVar2 = forMatch[2];
+              const iterExpr = forMatch[3];
+              const bodyLines = [];
+              i++;
+              while (i < lines.length && (lines[i].startsWith('    ') || lines[i].startsWith('\t') || lines[i].trim() === '')) {
+                if (lines[i].trim() !== '') bodyLines.push(lines[i].replace(/^    /, '').replace(/^\t/, ''));
+                i++;
+              }
+
+              const iterable = evaluateExpression(iterExpr);
+              const items = Array.isArray(iterable) ? iterable : (typeof iterable === 'object' && iterable !== null ? Object.entries(iterable) : []);
+
+              for (let j = 0; j < items.length; j++) {
+                if (loopVar2 && Array.isArray(items[j])) {
+                  variables[loopVar] = items[j][0];
+                  variables[loopVar2] = items[j][1];
+                } else {
+                  variables[loopVar] = items[j];
+                }
+
+                for (const bLine of bodyLines) {
+                  const bTrimmed = bLine.trim();
+                  if (bTrimmed.startsWith('print(')) {
+                    const val = evaluateExpression(bTrimmed.slice(6, -1));
+                    output.push(formatValue(val));
+                  } else if (bTrimmed.includes('=') && !bTrimmed.includes('==') && !bTrimmed.startsWith('if')) {
+                    const eqIdx = bTrimmed.indexOf('=');
+                    variables[bTrimmed.slice(0, eqIdx).trim()] = evaluateExpression(bTrimmed.slice(eqIdx + 1).trim());
+                  }
+                }
+              }
+              continue;
+            }
+          }
+
+          // While loop
+          if (trimmed.startsWith('while ')) {
+            const whileMatch = trimmed.match(/while (.+):/);
+            if (whileMatch) {
+              const condition = whileMatch[1];
+              const bodyLines = [];
+              i++;
+              while (i < lines.length && (lines[i].startsWith('    ') || lines[i].startsWith('\t') || lines[i].trim() === '')) {
+                if (lines[i].trim() !== '') bodyLines.push(lines[i].replace(/^    /, '').replace(/^\t/, ''));
+                i++;
+              }
+
+              let iterations = 0;
+              while (evaluateExpression(condition) && iterations < 1000) {
+                for (const bLine of bodyLines) {
+                  const bTrimmed = bLine.trim();
+                  if (bTrimmed.startsWith('print(')) {
+                    const val = evaluateExpression(bTrimmed.slice(6, -1));
+                    output.push(formatValue(val));
+                  } else if (bTrimmed.match(/^(\w+)\s*(\+|-|\*|\/)=\s*(.+)$/)) {
+                    const m = bTrimmed.match(/^(\w+)\s*(\+|-|\*|\/)=\s*(.+)$/);
+                    const value = evaluateExpression(m[3]);
+                    switch (m[2]) {
+                      case '+': variables[m[1]] += value; break;
+                      case '-': variables[m[1]] -= value; break;
+                      case '*': variables[m[1]] *= value; break;
+                      case '/': variables[m[1]] /= value; break;
+                    }
+                  } else if (bTrimmed.includes('=') && !bTrimmed.includes('==')) {
+                    const eqIdx = bTrimmed.indexOf('=');
+                    variables[bTrimmed.slice(0, eqIdx).trim()] = evaluateExpression(bTrimmed.slice(eqIdx + 1).trim());
+                  }
+                }
+                iterations++;
+              }
+              continue;
+            }
+          }
+
+          // If/elif/else
+          if (trimmed.startsWith('if ') || trimmed.startsWith('elif ') || trimmed === 'else:') {
+            const ifBlock = [];
+            let currentCondition = trimmed.startsWith('if ') ? trimmed.match(/if (.+):/)?.[1] : (trimmed === 'else:' ? null : null);
+            let currentBody = [];
+
+            if (trimmed.startsWith('elif ')) currentCondition = trimmed.match(/elif (.+):/)?.[1];
+            if (trimmed === 'else:') currentCondition = null;
+
+            i++;
+            while (i < lines.length && (lines[i].startsWith('    ') || lines[i].startsWith('\t') || lines[i].trim() === '')) {
+              const innerTrimmed = lines[i].trim();
+              if (innerTrimmed.startsWith('elif ') || innerTrimmed === 'else:') {
+                ifBlock.push({ condition: currentCondition, body: [...currentBody] });
+                currentBody = [];
+                if (innerTrimmed.startsWith('elif ')) currentCondition = innerTrimmed.match(/elif (.+):/)?.[1];
+                else currentCondition = null;
+                i++; continue;
+              }
+              if (innerTrimmed !== '') currentBody.push(lines[i].replace(/^    /, '').replace(/^\t/, ''));
+              i++;
+            }
+            ifBlock.push({ condition: currentCondition, body: [...currentBody] });
+
+            for (const branch of ifBlock) {
+              let shouldExecute = branch.condition === null ? true : Boolean(evaluateExpression(branch.condition));
+              if (shouldExecute) {
+                for (const bLine of branch.body) {
+                  const bTrimmed = bLine.trim();
+                  if (bTrimmed.startsWith('print(')) {
+                    const val = evaluateExpression(bTrimmed.slice(6, -1));
+                    output.push(formatValue(val));
+                  } else if (bTrimmed.match(/^(\w+)\s*(\+|-|\*|\/)=\s*(.+)$/)) {
+                    const m = bTrimmed.match(/^(\w+)\s*(\+|-|\*|\/)=\s*(.+)$/);
+                    const value = evaluateExpression(m[3]);
+                    switch (m[2]) {
+                      case '+': variables[m[1]] += value; break;
+                      case '-': variables[m[1]] -= value; break;
+                      case '*': variables[m[1]] *= value; break;
+                      case '/': variables[m[1]] /= value; break;
+                    }
+                  } else if (bTrimmed.includes('=') && !bTrimmed.includes('==')) {
+                    const eqIdx = bTrimmed.indexOf('=');
+                    variables[bTrimmed.slice(0, eqIdx).trim()] = evaluateExpression(bTrimmed.slice(eqIdx + 1).trim());
+                  }
+                }
+                break;
+              }
+            }
+            continue;
+          }
+
+          // Try/except
+          if (trimmed.startsWith('try:')) {
+            const tryBody = [];
+            const exceptBody = [];
+            let inExcept = false;
+            i++;
+            while (i < lines.length && (lines[i].startsWith('    ') || lines[i].startsWith('\t') || lines[i].trim() === '')) {
+              const innerTrimmed = lines[i].trim();
+              if (innerTrimmed.startsWith('except')) { inExcept = true; i++; continue; }
+              if (innerTrimmed.startsWith('finally')) break;
+              if (innerTrimmed !== '') {
+                if (inExcept) exceptBody.push(lines[i].replace(/^    /, '').replace(/^\t/, ''));
+                else tryBody.push(lines[i].replace(/^    /, '').replace(/^\t/, ''));
+              }
+              i++;
+            }
+
+            try {
+              for (const bLine of tryBody) {
+                const bTrimmed = bLine.trim();
+                if (bTrimmed.startsWith('print(')) {
+                  const val = evaluateExpression(bTrimmed.slice(6, -1));
+                  output.push(formatValue(val));
+                } else if (bTrimmed.includes('=') && !bTrimmed.includes('==')) {
+                  const eqIdx = bTrimmed.indexOf('=');
+                  variables[bTrimmed.slice(0, eqIdx).trim()] = evaluateExpression(bTrimmed.slice(eqIdx + 1).trim());
+                }
+              }
+            } catch (e) {
+              for (const bLine of exceptBody) {
+                const bTrimmed = bLine.trim();
+                if (bTrimmed.startsWith('print(')) {
+                  const val = evaluateExpression(bTrimmed.slice(6, -1));
+                  output.push(formatValue(val));
+                }
+              }
+            }
+            continue;
+          }
+
+          // With statement
+          if (trimmed.startsWith('with ')) {
+            const bodyLines = [];
+            i++;
+            while (i < lines.length && (lines[i].startsWith('    ') || lines[i].startsWith('\t') || lines[i].trim() === '')) {
+              if (lines[i].trim() !== '') bodyLines.push(lines[i].replace(/^    /, '').replace(/^\t/, ''));
+              i++;
+            }
+            for (const bLine of bodyLines) {
+              const bTrimmed = bLine.trim();
+              if (bTrimmed.startsWith('print(')) {
+                const val = evaluateExpression(bTrimmed.slice(6, -1));
+                output.push(formatValue(val));
+              }
+            }
+            continue;
+          }
+
+          // Decorator
+          if (trimmed.startsWith('@')) { i++; continue; }
+
+          // Variable assignment
+          const assignMatch = trimmed.match(/^(\w+)\s*=\s*(.+)$/);
+          if (assignMatch && !trimmed.startsWith('print')) {
+            variables[assignMatch[1]] = evaluateExpression(assignMatch[2]);
+            i++; continue;
+          }
+
+          // Augmented assignment
+          const augMatch = trimmed.match(/^(\w+)\s*(\+|-|\*|\/)=\s*(.+)$/);
+          if (augMatch) {
+            const value = evaluateExpression(augMatch[3]);
+            switch (augMatch[2]) {
+              case '+': variables[augMatch[1]] = (variables[augMatch[1]] || 0) + value; break;
+              case '-': variables[augMatch[1]] = (variables[augMatch[1]] || 0) - value; break;
+              case '*': variables[augMatch[1]] = (variables[augMatch[1]] || 1) * value; break;
+              case '/': variables[augMatch[1]] = (variables[augMatch[1]] || 0) / value; break;
+            }
+            i++; continue;
+          }
+
+          // Print
+          if (trimmed.startsWith('print(')) {
+            const printExpr = trimmed.slice(6, -1);
+            const sepMatch = printExpr.match(/,\s*sep\s*=\s*(["'])(.+?)\1/);
+            const endMatch = printExpr.match(/,\s*end\s*=\s*(["'])(.+?)\1/);
+            let cleanExpr = printExpr.replace(/,\s*sep\s*=\s*(["'])(.+?)\1/, '').replace(/,\s*end\s*=\s*(["'])(.+?)\1/, '').trim();
+            if (cleanExpr.endsWith(',')) cleanExpr = cleanExpr.slice(0, -1).trim();
+            const sep = sepMatch ? sepMatch[2] : ' ';
+            const end = endMatch ? endMatch[2] : '';
+            const args = splitArgs(cleanExpr);
+            const values = args.map(arg => formatValue(evaluateExpression(arg.trim())));
+            output.push(values.join(sep) + end);
+            i++; continue;
+          }
+
+          i++;
+        }
+
+        return output.join('\n');
+      } catch (error) {
+        return `Error: ${error.message || 'Unknown error'}`;
+      }
+    }
+
+    // ==================== MARKDOWN RENDERER ====================
+    function LessonContent({ content }) {
+      const lines = content.split('\n');
+      const elements = [];
+      let inCodeBlock = false;
+      let codeContent = '';
+      let key = 0;
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (line.startsWith('```')) {
+          if (inCodeBlock) {
+            elements.push(
+              <pre key={key++} className="bg-gray-900 rounded-lg p-4 my-3 overflow-x-auto border border-gray-700">
+                <code className="text-sm text-green-400 font-mono">{codeContent.trim()}</code>
+              </pre>
+            );
+            codeContent = '';
+            inCodeBlock = false;
+          } else { inCodeBlock = true; }
+          continue;
+        }
+        if (inCodeBlock) { codeContent += line + '\n'; continue; }
+        if (line.startsWith('# ')) elements.push(<h1 key={key++} className="text-2xl font-bold text-white mb-4 mt-2">{line.slice(2)}</h1>);
+        else if (line.startsWith('## ')) elements.push(<h2 key={key++} className="text-xl font-bold text-yellow-400 mb-3 mt-5">{line.slice(3)}</h2>);
+        else if (line.startsWith('### ')) elements.push(<h3 key={key++} className="text-lg font-bold text-white mb-2 mt-4">{line.slice(4)}</h3>);
+        else if (line.startsWith('> ')) elements.push(<div key={key++} className="bg-blue-900/30 border-l-4 border-blue-400 p-3 my-3 rounded-r text-sm text-blue-200" dangerouslySetInnerHTML={{__html: renderInline(line.slice(2))}} />);
+        else if (line.startsWith('- ') || line.startsWith('* ')) elements.push(<li key={key++} className="text-gray-300 ml-4 mb-1 list-disc" dangerouslySetInnerHTML={{__html: renderInline(line.slice(2))}} />);
+        else if (/^\d+\.\s/.test(line)) elements.push(<li key={key++} className="text-gray-300 ml-4 mb-1 list-decimal" dangerouslySetInnerHTML={{__html: renderInline(line.replace(/^\d+\.\s/, ''))}} />);
+        else if (line.trim() === '') elements.push(<div key={key++} className="h-2" />);
+        else elements.push(<p key={key++} className="text-gray-300 leading-relaxed mb-2" dangerouslySetInnerHTML={{__html: renderInline(line)}} />);
+      }
+      return <div>{elements}</div>;
+    }
+
+    function renderInline(text) {
+      return text
+        .replace(/\*\*(.+?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>')
+        .replace(/`(.+?)`/g, '<code class="bg-gray-800 px-1.5 py-0.5 rounded text-yellow-400 text-sm font-mono">$1</code>');
+    }
+
+    // ==================== MAIN APP ====================
+    function App() {
+      const [currentSection, setCurrentSection] = useState(0);
+      const [currentLesson, setCurrentLesson] = useState(0);
+      const [code, setCode] = useState('');
+      const [output, setOutput] = useState('');
+      const [completedLessons, setCompletedLessons] = useState(new Set());
+      const [showSolution, setShowSolution] = useState(false);
+      const [sidebarOpen, setSidebarOpen] = useState(true);
+      const [isRunning, setIsRunning] = useState(false);
+      const [testResult, setTestResult] = useState(null);
+
+      useEffect(() => {
+        const saved = localStorage.getItem('pylearn-progress');
+        if (saved) setCompletedLessons(new Set(JSON.parse(saved)));
+      }, []);
+
+      useEffect(() => {
+        localStorage.setItem('pylearn-progress', JSON.stringify([...completedLessons]));
+      }, [completedLessons]);
+
+      const section = courseData[currentSection];
+      const lesson = section?.lessons[currentLesson];
+
+      useEffect(() => {
+        if (lesson) {
+          setCode(lesson.code);
+          setOutput('');
+          setShowSolution(false);
+          setTestResult(null);
+        }
+      }, [lesson]);
+
+      const runCode = () => {
+        setIsRunning(true);
+        setTimeout(() => {
+          setOutput(executePython(code));
+          setIsRunning(false);
+        }, 300);
+      };
+
+      const checkSolution = () => {
+        if (!lesson) return;
+        const result = executePython(code);
+        setOutput(result);
+        const expected = lesson.tests[0]?.expected || '';
+        if (result.trim() === expected.trim()) {
+          setTestResult('pass');
+          setCompletedLessons(prev => new Set([...prev, lesson.id]));
+        } else {
+          setTestResult('fail');
+        }
+      };
+
+      const nextLesson = () => {
+        if (currentLesson < section.lessons.length - 1) setCurrentLesson(currentLesson + 1);
+        else if (currentSection < courseData.length - 1) { setCurrentSection(currentSection + 1); setCurrentLesson(0); }
+      };
+
+      const prevLesson = () => {
+        if (currentLesson > 0) setCurrentLesson(currentLesson - 1);
+        else if (currentSection > 0) { setCurrentSection(currentSection - 1); setCurrentLesson(courseData[currentSection - 1].lessons.length - 1); }
+      };
+
+      const totalLessons = courseData.reduce((acc, s) => acc + s.lessons.length, 0);
+      const completedCount = completedLessons.size;
+      const progress = totalLessons > 0 ? (completedCount / totalLessons) * 100 : 0;
+
+      if (!lesson) return null;
+
+      return (
+        <div className="h-screen flex flex-col bg-gray-900 text-white overflow-hidden">
+          {/* Header */}
+          <header className="bg-[#0a0a23] border-b border-gray-700 px-4 py-3 flex items-center justify-between shrink-0">
+            <div className="flex items-center gap-3">
+              <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden p-2 hover:bg-gray-700 rounded">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">🐍</span>
+                <h1 className="text-xl font-bold text-gray-200">
+                  <span className="text-yellow-400">Py</span>Learn
+                </h1>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="hidden sm:flex items-center gap-2">
+                <div className="w-32 h-2 bg-gray-700 rounded-full overflow-hidden">
+                  <div className="h-full bg-yellow-400 rounded-full transition-all duration-500" style={{width: `${progress}%`}} />
+                </div>
+                <span className="text-sm text-gray-400">{completedCount}/{totalLessons}</span>
+              </div>
+              <div className="flex items-center gap-1 bg-gray-800 rounded-lg px-3 py-1.5">
+                <span className="text-yellow-400">🏆</span>
+                <span className="text-sm font-medium">{completedCount}</span>
+              </div>
+            </div>
+          </header>
+
+          <div className="flex flex-1 overflow-hidden">
+            {/* Sidebar */}
+            <aside className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:relative z-40 w-72 h-full bg-[#1b1b32] border-r border-gray-700 overflow-y-auto transition-transform duration-300 shrink-0`}>
+              <div className="p-4">
+                <h2 className="text-lg font-bold text-gray-200 mb-4">📚 Программа курса</h2>
+                {courseData.map((sec, sIdx) => (
+                  <div key={sec.id} className="mb-3">
+                    <button onClick={() => setCurrentSection(sIdx)}
+                      className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-2 transition-colors ${sIdx === currentSection ? 'bg-[#2a2a4b] text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}>
+                      <span className="text-lg">{sec.icon}</span>
+                      <span className="text-sm font-medium">{sec.title}</span>
+                      <span className="ml-auto text-xs text-gray-500">{sec.lessons.filter(l => completedLessons.has(l.id)).length}/{sec.lessons.length}</span>
+                    </button>
+                    {sIdx === currentSection && (
+                      <div className="ml-4 mt-1 space-y-1">
+                        {sec.lessons.map((les, lIdx) => (
+                          <button key={les.id} onClick={() => { setCurrentSection(sIdx); setCurrentLesson(lIdx); setSidebarOpen(false); }}
+                            className={`w-full text-left px-3 py-1.5 rounded text-sm flex items-center gap-2 transition-colors ${lIdx === currentLesson && sIdx === currentSection ? 'bg-yellow-400 text-black font-medium' : completedLessons.has(les.id) ? 'text-green-400 hover:bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}>
+                            <span className="text-xs">{completedLessons.has(les.id) ? '✅' : lIdx === currentLesson && sIdx === currentSection ? '▶' : '○'}</span>
+                            <span className="truncate">{les.title}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </aside>
+
+            {sidebarOpen && <div className="lg:hidden fixed inset-0 bg-black/50 z-30" onClick={() => setSidebarOpen(false)} />}
+
+            {/* Main content */}
+            <main className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+              <div className="flex-1 overflow-y-auto p-4 lg:p-6">
+                <div className="max-w-3xl mx-auto fade-in">
+                  <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
+                    <span>{section.icon} {section.title}</span>
+                    <span>/</span>
+                    <span className="text-white">{lesson.title}</span>
+                  </div>
+
+                  <div className="bg-[#1b1b32] rounded-xl p-6 border border-gray-700 mb-6">
+                    <LessonContent content={lesson.content} />
+                  </div>
+
+                  <div className="bg-[#1b1b32] rounded-xl p-6 border border-yellow-400/30 mb-6">
+                    <h3 className="text-yellow-400 font-bold text-lg mb-3 flex items-center gap-2">🎯 Задание</h3>
+                    <p className="text-gray-300 leading-relaxed" dangerouslySetInnerHTML={{
+                      __html: lesson.task.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white">$1</strong>').replace(/`(.+?)`/g, '<code class="bg-gray-800 px-1.5 py-0.5 rounded text-yellow-400 text-sm">$1</code>')
+                    }} />
+                    <div className="mt-4">
+                      <button onClick={() => setShowSolution(!showSolution)} className="text-sm text-gray-400 hover:text-white transition-colors underline">
+                        {showSolution ? '🙈 Скрыть подсказку' : '💡 Показать подсказку'}
+                      </button>
+                    </div>
+                    {showSolution && (
+                      <div className="mt-3 bg-gray-800 rounded-lg p-4">
+                        <pre className="text-sm text-green-400 whitespace-pre-wrap">{lesson.hint}</pre>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex justify-between items-center">
+                    <button onClick={prevLesson} disabled={currentSection === 0 && currentLesson === 0}
+                      className="px-4 py-2 bg-gray-700 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-sm transition-colors">← Назад</button>
+                    <button onClick={nextLesson} disabled={currentSection === courseData.length - 1 && currentLesson === section.lessons.length - 1}
+                      className="px-4 py-2 bg-yellow-400 hover:bg-yellow-300 text-black font-medium disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-sm transition-colors">Далее →</button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Code editor */}
+              <div className="lg:w-[480px] flex flex-col border-t lg:border-t-0 lg:border-l border-gray-700 bg-[#0a0a23] shrink-0 h-[50vh] lg:h-auto">
+                <div className="flex items-center justify-between px-4 py-2 bg-[#1b1b32] border-b border-gray-700">
+                  <div className="flex items-center gap-2">
+                    <div className="flex gap-1.5">
+                      <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                      <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                      <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <span className="text-sm text-gray-400 ml-2">editor.py</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={runCode} disabled={isRunning}
+                      className="px-3 py-1 bg-green-600 hover:bg-green-500 disabled:opacity-50 rounded text-sm font-medium transition-colors flex items-center gap-1">
+                      {isRunning ? '⏳' : '▶'} <span>Запуск</span>
+                    </button>
+                    <button onClick={checkSolution}
+                      className="px-3 py-1 bg-yellow-400 hover:bg-yellow-300 text-black rounded text-sm font-medium transition-colors">✓ Проверить</button>
+                  </div>
+                </div>
+                <div className="flex-1 overflow-hidden">
+                  <textarea value={code} onChange={(e) => setCode(e.target.value)}
+                    className="w-full h-full p-4 bg-[#0a0a23] text-green-400 font-mono text-sm resize-none focus:outline-none leading-relaxed code-editor"
+                    spellCheck={false} placeholder="# Напишите ваш код здесь..." />
+                </div>
+                <div className="border-t border-gray-700 bg-[#1b1b32]">
+                  <div className="flex items-center justify-between px-4 py-2 border-b border-gray-700">
+                    <span className="text-sm text-gray-400 font-medium">📋 Результат</span>
+                    {testResult && (
+                      <span className={`text-sm font-medium ${testResult === 'pass' ? 'text-green-400' : 'text-red-400'}`}>
+                        {testResult === 'pass' ? '✅ Верно!' : '❌ Неверно'}
+                      </span>
+                    )}
+                  </div>
+                  <div className="p-4 h-32 overflow-y-auto">
+                    {output ? <pre className="text-sm text-white font-mono whitespace-pre-wrap">{output}</pre>
+                      : <p className="text-sm text-gray-500 italic">Нажмите "Запуск" для выполнения кода</p>}
+                  </div>
+                </div>
+              </div>
+            </main>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
